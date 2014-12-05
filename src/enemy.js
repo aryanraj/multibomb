@@ -2,21 +2,14 @@
 	if(typeof define==="function" && define.amd)
 		define(['exports'], factory) //AMD
 	else factory(global);
-})(typeof window === "object" ? window.Enemy = {} : module.exports = {} ,
+})(typeof window === "object" ? window.Enemy = {} : module.exports ,
 function(enemy){
-	var object = function(x,y){
+	var object = function(x,y,d){
 		this.xcord = x;
 		this.ycord = y;
 		this.xtemp = x;
 		this.ytemp = y;
-		this.direct = (function(){
-			switch(parseInt(Math.random()*4)) {
-				case 0: return "left";
-				case 1: return "right";
-				case 2: return "up";
-				case 3: return "down";
-			}
-		})();
+		this.direct = d;
 		this.alive = true;
 		this.prevMove = 0;
 		this.imageIndex = 0;
@@ -81,8 +74,8 @@ function(enemy){
 
 	enemy.list = {};
 	enemy.count = 0;
-	enemy.create = function(x,y,id) {
-		enemy.list[enemy.count] = enemy.list[id] = new object(x,y);
+	enemy.create = function(x,y,d,id) {
+		enemy.list[enemy.count] = enemy.list[id] = new object(x,y,d);
 		enemy.count++;
 	}
 });

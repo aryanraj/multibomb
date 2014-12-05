@@ -2,7 +2,7 @@
 	if(typeof define==="function" && define.amd)
 		define(['exports'], factory) //AMD
 	else factory(global);
-})(typeof window === "object" ? window.Bomberman = {} : module.exports = {} ,
+})(typeof window === "object" ? window.Bomberman = {} : module.exports ,
 function(man){
 	var object = function(x,y){
 		this.xcord = x;
