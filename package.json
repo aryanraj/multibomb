@@ -1,0 +1,7 @@
+{
+  "name": "multibomb",
+  "version": "0.0.1",
+  "dependencies": {
+    "express.io": "^1.1.13"
+  }
+}
