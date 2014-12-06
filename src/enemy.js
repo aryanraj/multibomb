@@ -72,10 +72,35 @@ function(enemy){
 		}
 	};
 
+	enemy.move = function(update, token) {
+		for(i in enemy.list) {
+			var obj = enemy.list[i],
+				upd = update[i];
+			if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
+				obj.deathCountdown=100;
+				obj.alive=false;
+			}
+			if(typeof obj.deathCountdown !== "undefined"){
+				token.printList.push({
+					type : "deadenemy",
+					x : obj.xcord,
+					y : obj.ycord,
+					imageNo : obj.deathCountdown--
+				});
+				if(obj.deathCountdown == 0)
+					delete obj.deathCountdown;
+			}
+			else {
+				for(j in obj) if(j in upd) obj[j] = upd[j];
+				obj.move(token);
+			}
+		}
+	};
+
 	enemy.list = {};
 	enemy.count = 0;
 	enemy.create = function(x,y,d,id) {
-		enemy.list[enemy.count] = enemy.list[id] = new object(x,y,d);
+		enemy.list[id] = new object(x,y,d);
 		enemy.count++;
 	}
 });
