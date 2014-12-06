@@ -156,14 +156,35 @@ function(man){
 		token.printList.push(this.printMan(dir));
 	};
 
-	man.preMove = function() {
-
-	}
+	man.move = function(update, token) {
+		for(i in man.list) {
+			var obj = man.list[i],
+				upd = update[i];
+			if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
+				obj.deathCountdown=100;
+				obj.alive=false;
+			}
+			if(typeof obj.deathCountdown !== "undefined") {
+				token.printList.push({
+					type : "deadman",
+					x : obj.xcord,
+					y : obj.ycord,
+					imageNo : obj.deathCountdown--
+				})
+				if(obj.deathCountdown == 0)
+					delete obj.deathCountdown;
+			}
+			else {
+				for(j in obj) if(j in upd) obj[j] = upd[j];
+				obj.move(upd.move||"stand",token);
+			}
+		}
+	};
 
 	man.list = {};
 	man.count = 0;
 	man.create = function(x,y,id) {
-		man.list[man.count] = man.list[id] = new object(x,y);
+		man.list[id] = new object(x,y);
 		man.count++;
 	}
 });
