@@ -2,7 +2,7 @@
 	if(typeof define==="function" && define.amd)
 		define(['exports'], factory) //AMD
 	else factory(global);
-})(typeof window === "object" ? window.Bomberman = {} : module.exports ,
+})(typeof window === "object" ? window.Bomberman = {} : module.exports = {},
 function(man){
 	var object = function(x,y){
 		this.xcord = x;
@@ -156,35 +156,37 @@ function(man){
 		token.printList.push(this.printMan(dir));
 	};
 
-	man.move = function(update, token) {
-		for(i in man.list) {
-			var obj = man.list[i],
-				upd = update[i];
-			if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
-				obj.deathCountdown=100;
-				obj.alive=false;
+	man.handler = function() {
+		this.move = function(update, token) {
+			for(i in this.list) {
+				var obj = this.list[i],
+					upd = update[i];
+				if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
+					obj.deathCountdown=100;
+					obj.alive=false;
+				}
+				if(typeof obj.deathCountdown !== "undefined") {
+					token.printList.push({
+						type : "deadman",
+						x : obj.xcord,
+						y : obj.ycord,
+						imageNo : obj.deathCountdown--
+					})
+					if(obj.deathCountdown == 0)
+						delete obj.deathCountdown;
+				}
+				else {
+					for(j in obj) if(j in upd) obj[j] = upd[j];
+					obj.move(upd.move||"stand",token);
+				}
 			}
-			if(typeof obj.deathCountdown !== "undefined") {
-				token.printList.push({
-					type : "deadman",
-					x : obj.xcord,
-					y : obj.ycord,
-					imageNo : obj.deathCountdown--
-				})
-				if(obj.deathCountdown == 0)
-					delete obj.deathCountdown;
-			}
-			else {
-				for(j in obj) if(j in upd) obj[j] = upd[j];
-				obj.move(upd.move||"stand",token);
-			}
-		}
-	};
+		};
 
-	man.list = {};
-	man.count = 0;
-	man.create = function(x,y,id) {
-		man.list[id] = new object(x,y);
-		man.count++;
+		this.list = {};
+		this.count = 0;
+		this.create = function(x,y,id) {
+			this.list[id] = new object(x,y);
+			this.count++;
+		}
 	}
 });
