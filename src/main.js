@@ -1,5 +1,6 @@
 requirejs.config({
 	baseUrl : '',
+	waitSeconds : 30,
 	paths : {
 		bomberMan : "bomber_man",
 		enemy : "enemy",
