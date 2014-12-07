@@ -40,7 +40,10 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 	var socket = io.connect(),
 		cGame,
 		tCount = 0,
-		startTime = -1;
+		startTime = -1,
+		men = {},
+		keysDown = {},
+		selfId;
 	socket.emit("done");
 	socket.on("data", function(data){
 		cGame = new g.handler(new i.handler(data.images));
@@ -57,21 +60,48 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			t : JSON.parse(JSON.stringify(data.token)),
 			id : "server"
 		});
-		console.log(cGame);
-		setInterval(function(){
+		for(i in data.man) men[data.man[i].id] = {};
+		selfId = socket.socket.sessionid;
+
+		addEventListener("keydown",function (e) {
+    		keysDown[e.keyCode]=true;
+		}, false);
+
+		addEventListener("keyup",function (e) {
+    		delete keysDown[e.keyCode];
+		}, false);
+
+		var iii = setInterval(function(){
 			var tt = (new Date()).getTime();
 			if(startTime == -1)
 				startTime = tt;
 			if((tt-startTime)<40*tCount)
 				return;
 			tCount++;
+
+			if (38 in keysDown){
+				men[selfId].move = "up";
+			}	//up
+    		else if (40 in keysDown){
+				men[selfId].move = "down";
+			}	//down
+    		else if (37 in keysDown){
+				men[selfId].move = "left";
+			}	//left
+    		else if (39 in keysDown){
+				men[selfId].move = "right";
+			}	//right
+			if(32 in keysDown){
+				men[selfId].move = "bomb";
+			}	//bomb - space
 			cGame.execute({
-				actual : {
-					man : [],
+				actual : [{
+					man : men,
 					enemy : []
-				},
+				}],
 				print : true
 			});
+			men[selfId] = {};
 		},5);
 	});
 })
