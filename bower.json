@@ -22,6 +22,7 @@
   ],
   "dependencies": {
     "easeljs": "*",
-    "requirejs": "*"
+    "requirejs": "*",
+    "underscore": "~1.7.0"
   }
 }
