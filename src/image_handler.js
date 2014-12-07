@@ -28,7 +28,7 @@ function(img){
 		this.image = image;
 		this.imageName = imageName.split('.').slice(0,-1).join('.');
 		this.type = imageName.split('.')[0];
-		this.imageNo = parseInt(imageName.split('.')[1])||''; 
+		this.imageNo = imageName.split('.')[1] !== '' ? parseInt(imageName.split('.')[1]) :''; 
 		image.src = "/images/"+imageName;
 	};
 	img.handler = function(d){
@@ -56,7 +56,7 @@ function(img){
 		this.getImage = function(data) {
 			var i;
 			for(i in this.list)
-				if(this.list[i].type == data.type && (this.list[i].imageNo == '' || this.list[i].imageNo == data.imageNo))
+				if(this.list[i].type == data.type && (this.list[i].imageNo === '' || this.list[i].imageNo === data.imageNo))
 					return this.list[i];
 		}
 		this.render = function(list) {
