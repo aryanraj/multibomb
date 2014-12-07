@@ -13,7 +13,22 @@ function(game){
 	};
 
 	object.prototype.background = function() {
-		
+		if(this.token.printList) {
+			this.token.printList.push({
+				type : 'bk',
+				x : 0,
+				y : 0
+			});
+			var i,j;
+			for(i in this.token.backgrndArray)
+				for(j in this.token.backgrndArray[i])
+					if(this.token.backgrndArray[i][j] == -3)
+						this.token.printList.push({
+							type : 'box',
+							x : j*32+16,
+							y : i*32+20
+						});
+		}
 	};
 
 	object.prototype.execute = function(data) {
@@ -24,6 +39,7 @@ function(game){
 			var time = (new Date()).getTime();
 			if(typeof this.startTime === "undefined")
 				this.startTime = time;
+			this.background();
 			this.man.move(data[i].man, this.token);
 			this.enemy.move(data[i].enemy, this.token);
 			this.timeStamp[time-this.startTime] = data;
@@ -54,14 +70,10 @@ function(game){
 		this.execute = function(data) {
 			var i;
 			this.printList.length = 0;
-			this.printList.push({
-				type : 'bk',
-				x : 0,
-				y : 0
-			})
 			for(i in this.list)	if(i in data) this.list[i].execute(data[i]);
 			if(this.image && data.print)
 				this.image.render(this.printList);
+			// console.log(this.printList);
 		}
 		if(typeof data !== "undefined")
 			this.create(data);
