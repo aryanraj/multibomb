@@ -21,4 +21,4 @@ app.io.on('connection', function(){
 	console.log('connection made')
 })
 
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
