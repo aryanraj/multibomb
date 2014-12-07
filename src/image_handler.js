@@ -1,3 +1,4 @@
+"use strict";
 (function(global, factory){
 	if(typeof define==="function" && define.amd)
 		define(['exports'], factory) //AMD
@@ -24,13 +25,13 @@ function(img){
 					break;
 			}
 		}
-		this.image = new createjs.Bitmap(image);
+		this.image = image;
 		this.imageName = imageName.split('.').slice(0,-1).join('.');
 		this.type = imageName.split('.')[0];
-		this.imageNo = parseInt(imageName.split('.')[1]); 
+		this.imageNo = parseInt(imageName.split('.')[1])||''; 
 		image.src = "/images/"+imageName;
 	};
-	img.handler = function(){
+	img.handler = function(d){
 		this.list = {};
 		this.count = 0;
 		this.canvas = (function (w,h){
@@ -62,12 +63,15 @@ function(img){
 			this.stage.removeAllChildren();
 			list.sort(function(a,b){return a.z-b.z});
 			for(var i=0; i<list.length; i++) {
-				var o=this.getImage(list[i]);
-				o.image.x = list[i].x;
-				o.image.y = list[i].y + list[i].ycorr;
-				this.stage.addChild(o.image);
+				var m = this.getImage(list[i]),
+					o = new createjs.Bitmap(m.image);
+				o.x = list[i].x;
+				o.y = list[i].y + m.ycorr;
+				this.stage.addChild(o);
 			}
 			this.stage.update();
 		}
+		if(typeof d !== "undefined")
+			this.create(d);
 	}
 })

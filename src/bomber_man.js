@@ -1,3 +1,4 @@
+"use strict";
 (function(global, factory){
 	if(typeof define==="function" && define.amd)
 		define(['exports'], factory) //AMD
@@ -51,22 +52,22 @@ function(man){
 	};
 
 	object.prototype.move = function(dir, token) {
-		xfactor = (this.xcord)/32;
-		yfactor = (this.ycord)/32;
-		leftmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] == 0 
-					|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] > 0
-							&& this.bombAllow) ? true : false ;
-		upmove = token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] == 0 
-					|| ( token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] > 0
-							&& this.bombAllow) ? true : false ;
-		rightmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] == 0
-					|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] > 0
-							&& this.bombAllow) ? true : false ;
-		downmove = token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] == 0 
-					|| ( token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] > 0
-							&& this.bombAllow) ? true : false ;
-		horimove = yfactor%2 == 1 ? true : false;
-		verimove = xfactor%2 == 1 ? true : false;
+		var xfactor = (this.xcord)/32,
+			yfactor = (this.ycord)/32,
+			leftmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] == 0 
+						|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] > 0
+								&& this.bombAllow) ? true : false ,
+			upmove = token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] == 0 
+						|| ( token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] > 0
+								&& this.bombAllow) ? true : false ,
+			rightmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] == 0
+						|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] > 0
+								&& this.bombAllow) ? true : false ,
+			downmove = token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] == 0 
+						|| ( token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] > 0
+								&& this.bombAllow) ? true : false ,
+			horimove = yfactor%2 == 1 ? true : false,
+			verimove = xfactor%2 == 1 ? true : false;
 
 		switch(dir)	{
 			case "left":
@@ -153,14 +154,17 @@ function(man){
 			this.bombAllow = false ;
 
 		this.direct = dir;
-		token.printList.push(this.printMan(dir));
+		if(token.printList)
+			token.printList.push(this.printMan(dir));
 	};
 
-	man.handler = function() {
+	man.handler = function(d) {
 		this.move = function(update, token) {
+			var i;
 			for(i in this.list) {
 				var obj = this.list[i],
 					upd = update[i];
+				if(typeof upd == "undefined") upd = {};
 				if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
 					obj.deathCountdown=100;
 					obj.alive=false;
@@ -176,6 +180,7 @@ function(man){
 						delete obj.deathCountdown;
 				}
 				else {
+					var j;
 					for(j in obj) if(j in upd) obj[j] = upd[j];
 					obj.move(upd.move||"stand",token);
 				}
@@ -184,9 +189,16 @@ function(man){
 
 		this.list = {};
 		this.count = 0;
-		this.create = function(x,y,id) {
-			this.list[id] = new object(x,y);
-			this.count++;
+		this.create = function(data) {
+			if(typeof data.id !== "undefined")
+				data=[data];
+			var i;
+			for(i in data) {
+				this.list[data[i].id] = new object(data[i].x,data[i].y);
+				this.count++;
+			}
 		}
+		if(typeof d !== "undefined")
+			this.create(d);
 	}
 });

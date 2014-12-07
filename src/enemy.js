@@ -1,3 +1,4 @@
+"use strict";
 (function(global, factory){
 	if(typeof define==="function" && define.amd)
 		define(['exports'], factory) //AMD
@@ -26,7 +27,7 @@ function(enemy){
 		return result;
 	};
 
-	object.prototype.Move = function(token)	{
+	object.prototype.move = function(token)	{
 		switch(this.direct){
 			case 'left':
 				if(token.backgrndArray[parseInt(this.ycord/32)][parseInt(this.xcord/32-0.001)] == 0)
@@ -45,13 +46,14 @@ function(enemy){
 					this.ycord +=token.enemySpeed;
 				break;
 		}
-		token.printList.push(this.printEnemy());
+		if(token.printList)
+			token.printList.push(this.printEnemy());
 		this.automator();
 	};
 
 	object.prototype.automator = function() {
 		if(this.xtemp == this.xcord && this.ytemp == this.ycord){
-			cha = this.xcord + this.ycord + this.prevMove;
+			var cha = this.xcord + this.ycord + this.prevMove;
 			this.prevMove++;
 			switch(this.direct){
 				case 'left': cha+=1; 	break;
@@ -72,11 +74,13 @@ function(enemy){
 		}
 	};
 
-	enemy.handler = function(){
+	enemy.handler = function(d){
 		this.move = function(update, token) {
+			var i;
 			for(i in this.list) {
 				var obj = this.list[i],
 					upd = update[i];
+				if(typeof upd == "undefined") upd = {};
 				if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
 					obj.deathCountdown=100;
 					obj.alive=false;
@@ -92,17 +96,24 @@ function(enemy){
 						delete obj.deathCountdown;
 				}
 				else {
+					var j;
 					for(j in obj) if(j in upd) obj[j] = upd[j];
 					obj.move(token);
 				}
 			}
 		};
-
 		this.list = {};
 		this.count = 0;
-		this.create = function(x,y,d,id) {
-			this.list[id] = new object(x,y,d);
-			this.count++;
+		this.create = function(data) {
+			if(typeof data.id !== "undefined")
+				data=[data];
+			var i;
+			for(i in data) {
+				this.list[data[i].id] = new object(data[i].x,data[i].y,data[i].d);
+				this.count++;
+			}
 		}
+		if(typeof d !== "undefined")
+			this.create(d)
 	}
 });
