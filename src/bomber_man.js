@@ -38,14 +38,14 @@ function(man){
 				type : "man",
 				x : this.xcord+16,
 				y : this.ycord+32,
-				image : this.imageNo
+				imageNo : this.imageNo
 			}
 		else
 			result = {
 				type : "man",
 				x : this.xcord+16,
 				y : this.ycord+32,
-				image : this.imageNo+(this.imageIndex%4+1)/2
+				imageNo : this.imageNo+(this.imageIndex%4+1)/2
 			}
 		this.imageIndex++;
 		return result;
@@ -164,6 +164,7 @@ function(man){
 			for(i in this.list) {
 				var obj = this.list[i],
 					upd = update[i];
+				// console.log(upd);
 				if(typeof upd == "undefined") upd = {};
 				if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
 					obj.deathCountdown=100;
@@ -181,7 +182,8 @@ function(man){
 				}
 				else {
 					var j;
-					for(j in obj) if(j in upd) obj[j] = upd[j];
+					for(j in obj) if(j in upd && typeof obj[j] !== "function") obj[j] = upd[j];
+					// console.log(upd,obj.move);
 					obj.move(upd.move||"stand",token);
 				}
 			}

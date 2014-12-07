@@ -21,7 +21,7 @@ function(enemy){
 				type : "enemy",
 				x : this.xcord+16,
 				y : this.ycord+32,
-				image : this.imageIndex%4
+				imageNo : this.imageIndex%4
 			}
 		this.imageIndex++;
 		return result;
