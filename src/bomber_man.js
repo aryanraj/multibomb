@@ -143,7 +143,6 @@ function(man){
 					token.backgrndArray[parseInt(yfactor+0.5)][parseInt(xfactor+0.5)] = 100 ;
 					this.bombAllow = true;
 				}
-				console.log(dir);
 				break;
 		}
 		if(this.bombAllow

@@ -15,6 +15,10 @@ function(img){
 					that.ycorr = 20-this.height;
 					that.z = 20;
 					break;
+				case 'bomb' :
+					that.ycorr = 32-this.height;
+					that.z = 10;
+					break;
 				case 'box' :
 					that.ycorr = 0;
 					that.z = 10;
