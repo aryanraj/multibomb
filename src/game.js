@@ -12,6 +12,23 @@ function(game){
 		this.timeStamp = {};
 	};
 
+	object.prototype.blastBomb = function(x,y) {
+		var blastElement = [];
+		blastElement[-3] = 
+		blastElement[ 0] = true;
+		x = parseInt(x);
+		y = parseInt(y);
+		this.token.backgrndArray[y][x] = -20;
+		if(this.token.backgrndArray[y-1][x] in blastElement)
+			this.token.backgrndArray[y-1][x] = -20;
+		if(this.token.backgrndArray[y+1][x] in blastElement)
+			this.token.backgrndArray[y+1][x] = -20;
+		if(this.token.backgrndArray[y][x-1] in blastElement)
+			this.token.backgrndArray[y][x-1] = -20;
+		if(this.token.backgrndArray[y][x+1] in blastElement)
+			this.token.backgrndArray[y][x+1] = -20;
+	};
+
 	object.prototype.background = function() {
 		if(this.token.printList) {
 			this.token.printList.push({
@@ -21,14 +38,32 @@ function(game){
 			});
 			var i,j;
 			for(i in this.token.backgrndArray)
-				for(j in this.token.backgrndArray[i])
+				for(j in this.token.backgrndArray[i]) {
 					if(this.token.backgrndArray[i][j] == -3)
 						this.token.printList.push({
 							type : 'box',
 							x : j*32+16,
 							y : i*32+20
 						});
+					if(this.token.backgrndArray[i][j] > 10){
+						this.token.backgrndArray[i][j]--;
+						if(this.token.backgrndArray[i][j] == 10)
+							this.blastBomb(j,i);
+						this.token.printList.push({
+							type : 'bomb',
+							x : j*32+16,
+							y : i*32+20,
+							imageNo : parseInt(this.token.backgrndArray[i][j]/10)%2
+						});
+					}
+					if(this.token.backgrndArray[i][j]<-3){
+						this.token.backgrndArray[i][j]++;
+						if(this.token.backgrndArray[i][j] == -3)
+							this.token.backgrndArray[i][j] = 0;
+                    }
+				}
 		}
+
 	};
 
 	object.prototype.execute = function(data) {
