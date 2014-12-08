@@ -36,15 +36,15 @@ function(man){
 		if(this.imageIndex%2==0)
 			result = {
 				type : "man",
-				x : this.xcord+16,
-				y : this.ycord+32,
+				x : this.xcord,
+				y : this.ycord,
 				imageNo : this.imageNo
 			}
 		else
 			result = {
 				type : "man",
-				x : this.xcord+16,
-				y : this.ycord+32,
+				x : this.xcord,
+				y : this.ycord,
 				imageNo : this.imageNo+(this.imageIndex%4+1)/2
 			}
 		this.imageIndex++;
@@ -157,6 +157,13 @@ function(man){
 			token.printList.push(this.printMan(dir));
 	};
 
+	object.prototype.getCenter = function() {
+		return {
+			x : this.xcord+16,
+			y : this.ycord+16
+		};
+	};
+
 	man.handler = function(d) {
 		this.move = function(update, token) {
 			var i;
@@ -179,7 +186,7 @@ function(man){
 					if(obj.deathCountdown == 0)
 						delete obj.deathCountdown;
 				}
-				else {
+				if(obj.alive) {
 					var j;
 					for(j in obj) if(j in upd && typeof obj[j] !== "function") obj[j] = upd[j];
 					// console.log(upd,obj.move);
@@ -198,6 +205,13 @@ function(man){
 				this.list[data[i].id] = new object(data[i].x,data[i].y);
 				this.count++;
 			}
+		}
+		this.getCenter = function() {
+			var i,
+				center = {};
+			for(i in this.list) if(this.list[i].alive)
+				center[i]=this.list[i].getCenter();
+			return center;
 		}
 		if(typeof d !== "undefined")
 			this.create(d);

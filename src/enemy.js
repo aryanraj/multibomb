@@ -19,8 +19,8 @@ function(enemy){
 	object.prototype.printEnemy = function(){
 		var result = {
 				type : "enemy",
-				x : this.xcord+16,
-				y : this.ycord+32,
+				x : this.xcord,
+				y : this.ycord,
 				imageNo : this.imageIndex%4
 			}
 		this.imageIndex++;
@@ -74,6 +74,13 @@ function(enemy){
 		}
 	};
 
+	object.prototype.getCenter = function() {
+		return {
+			x : this.xcord+16,
+			y : this.ycord+16
+		};
+	};
+
 	enemy.handler = function(d){
 		this.move = function(update, token) {
 			var i;
@@ -95,7 +102,7 @@ function(enemy){
 					if(obj.deathCountdown == 0)
 						delete obj.deathCountdown;
 				}
-				else {
+				if(obj.alive) {
 					var j;
 					for(j in obj) if(j in upd) obj[j] = upd[j];
 					obj.move(token);
@@ -112,6 +119,13 @@ function(enemy){
 				this.list[data[i].id] = new object(data[i].x,data[i].y,data[i].d);
 				this.count++;
 			}
+		}
+		this.getCenter = function() {
+			var i,
+				center = {};
+			for(i in this.list) if(this.list[i].alive)
+				center[i]=this.list[i].getCenter();
+			return center;
 		}
 		if(typeof d !== "undefined")
 			this.create(d)

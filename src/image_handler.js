@@ -12,19 +12,23 @@ function(img){
 			switch(that.type) {
 				case 'enemy' :
 				case 'man' :
-					that.ycorr = 20-this.height;
+					that.ycorr = 20+32-this.height;
+					that.xcorr = 16;
 					that.z = 20;
 					break;
 				case 'bomb' :
-					that.ycorr = 32-this.height;
+					that.ycorr = 20+32-this.height;
+					that.xcorr = 16;
 					that.z = 10;
 					break;
 				case 'box' :
-					that.ycorr = 0;
+					that.ycorr = 20;
+					that.xcorr = 16;
 					that.z = 10;
 					break;
 				default :
 					that.ycorr = 0;
+					that.xcorr = 0;
 					that.z = 0;
 					break;
 			}
@@ -69,7 +73,7 @@ function(img){
 			for(var i=0; i<list.length; i++) {
 				var m = this.getImage(list[i]),
 					o = new createjs.Bitmap(m.image);
-				o.x = list[i].x;
+				o.x = list[i].x + m.xcorr;
 				o.y = list[i].y + m.ycorr;
 				this.stage.addChild(o);
 			}
