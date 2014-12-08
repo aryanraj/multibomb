@@ -10,23 +10,30 @@ function(img){
 			that = this;
 		image.onload = function() {
 			switch(that.type) {
-				case 'enemy' :
-				case 'man' :
+				case 'deadman':
+				case 'deadenemy':
+				case 'enemy':
+				case 'man':
 					that.ycorr = 20+32-this.height;
 					that.xcorr = 16;
 					that.z = 20;
 					break;
-				case 'bomb' :
+				case 'bomb':
 					that.ycorr = 20+32-this.height;
 					that.xcorr = 16;
 					that.z = 10;
 					break;
-				case 'box' :
+				case 'box':
 					that.ycorr = 20;
 					that.xcorr = 16;
 					that.z = 10;
 					break;
-				default :
+				case 'blast':
+					that.ycorr = -32+20;
+					that.xcorr = -32+16;
+					that.z = 10;
+					break;
+				default:
 					that.ycorr = 0;
 					that.xcorr = 0;
 					that.z = 0;

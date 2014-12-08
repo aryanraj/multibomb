@@ -21,7 +21,7 @@ function(game){
 		blastElement[ 0] = true;
 		x = parseInt(x);
 		y = parseInt(y);
-		this.token.backgrndArray[y][x] = -20;
+		this.token.backgrndArray[y][x] = -40;
 		if(this.token.backgrndArray[y-1][x] in blastElement)
 			this.token.backgrndArray[y-1][x] = -20;
 		if(this.token.backgrndArray[y+1][x] in blastElement)
@@ -68,8 +68,15 @@ function(game){
 						x : j*32+16,
 						y : i*32+16
 					});
+					if(this.token.printList && this.token.backgrndArray[i][j] < -20)
+						this.token.printList.push({
+							type : 'blast',
+							x : j*32,
+							y : i*32,
+							imageNo : parseInt((40+this.token.backgrndArray[i][j])/6)
+						});
 					this.token.backgrndArray[i][j]++;
-					if(this.token.backgrndArray[i][j] == -3)
+					if(this.token.backgrndArray[i][j] == -3 || this.token.backgrndArray[i][j] == -23)
 						this.token.backgrndArray[i][j] = 0;
                 }
 			}
@@ -127,8 +134,8 @@ function(game){
 			this.enemy.move(data[i].enemy, this.token);
 
 			this.timeStamp[time-this.startTime] = data[i];
-			if(time-this.startTime>10000&&time-this.startTime<10050)
-				console.log(Object.keys(this.timeStamp).length);
+			/*if(time-this.startTime>10000&&time-this.startTime<10050)
+				console.log(Object.keys(this.timeStamp).length);*/
 		}
 	};
 
