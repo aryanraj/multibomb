@@ -42,7 +42,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 		cGame,
 		tCount = 0,
 		startTime = -1,
-		men = {},
+		man = {},
+		enemy = {},
 		keysDown = {},
 		selfId;
 	socket.emit("done");
@@ -61,7 +62,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			t : JSON.parse(JSON.stringify(data.token)),
 			id : "server"
 		});
-		for(i in data.man) men[data.man[i].id] = {};
+		for(i in data.man) man[data.man[i].id] = {};
+		for(i in data.enemy) enemy[data.enemy[i].id] = {};
 		selfId = socket.socket.sessionid;
 
 		addEventListener("keydown",function (e) {
@@ -81,28 +83,28 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			tCount++;
 
 			if (38 in keysDown){
-				men[selfId].move = "up";
+				man[selfId].move = "up";
 			}	//up
     		else if (40 in keysDown){
-				men[selfId].move = "down";
+				man[selfId].move = "down";
 			}	//down
     		else if (37 in keysDown){
-				men[selfId].move = "left";
+				man[selfId].move = "left";
 			}	//left
     		else if (39 in keysDown){
-				men[selfId].move = "right";
+				man[selfId].move = "right";
 			}	//right
 			if(32 in keysDown){
-				men[selfId].move = "bomb";
+				man[selfId].move = "bomb";
 			}	//bomb - space
 			cGame.execute({
 				actual : [{
-					man : men,
-					enemy : []
+					man : man,
+					enemy : enemy
 				}],
 				print : true
 			});
-			men[selfId] = {};
+			man[selfId] = {};
 		},5);
 	});
 })
