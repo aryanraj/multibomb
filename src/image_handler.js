@@ -17,27 +17,22 @@ function(img){
 				case 'man':
 					that.ycorr = 20+32-this.height;
 					that.xcorr = 16;
-					that.z = 20;
 					break;
 				case 'bomb':
 					that.ycorr = 20+32-this.height;
 					that.xcorr = 16;
-					that.z = 10;
 					break;
 				case 'box':
 					that.ycorr = 20;
 					that.xcorr = 16;
-					that.z = 10;
 					break;
 				case 'blast':
 					that.ycorr = -32+20;
 					that.xcorr = -32+16;
-					that.z = 10;
 					break;
 				default:
 					that.ycorr = 0;
 					that.xcorr = 0;
-					that.z = 0;
 					break;
 			}
 		}
@@ -77,6 +72,7 @@ function(img){
 		}
 		this.render = function(list) {
 			this.stage.removeAllChildren();
+			// console.log(JSON.stringify(list));
 			list.sort(function(a,b){return a.z-b.z});
 			for(var i=0; i<list.length; i++) {
 				var m = this.getImage(list[i]),
@@ -87,7 +83,6 @@ function(img){
 					o.scaleX = o.scaleY = 1-(function (k) {
 						return k * k * ( ( 2.5 + 1 ) * k - 2.5 );
 					})(1-list[i].imageNo/m.scale);
-					// console.log(list[i].imageNo/m.scale);
 				}
 				this.stage.addChild(o);
 			}

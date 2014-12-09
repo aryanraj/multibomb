@@ -18,6 +18,7 @@ function(game){
 	object.prototype.blastBomb = function(x,y) {
 		var blastElement = [];
 		blastElement[-3] = 
+		blastElement[-4] = 
 		blastElement[ 0] = true;
 		x = parseInt(x);
 		y = parseInt(y);
@@ -37,18 +38,20 @@ function(game){
 			this.token.printList.push({
 				type : 'bk',
 				x : 0,
-				y : 0
+				y : 0,
+				z : 0
 			});
 		this.center.blast.length = 0;
 		var i,j;
 		for(i in this.token.backgrndArray)
 			for(j in this.token.backgrndArray[i]) {
-				if(this.token.backgrndArray[i][j] == -3)
+				if([-3,-4].indexOf(this.token.backgrndArray[i][j]) != -1)
 					if(this.token.printList)
 						this.token.printList.push({
 							type : 'box',
 							x : j*32,
-							y : i*32
+							y : i*32,
+							z : 10
 						});
 				if(this.token.backgrndArray[i][j] > 10){
 					this.token.backgrndArray[i][j]--;
@@ -60,10 +63,11 @@ function(game){
 							type : 'bomb',
 							x : j*32,
 							y : i*32,
+							z : 10,
 							imageNo : parseInt(this.token.backgrndArray[i][j]/10)%2
 						});
 				}
-				if(this.token.backgrndArray[i][j]<-3){
+				if(this.token.backgrndArray[i][j]<-10){
 					this.center.blast.push({
 						x : j*32+16,
 						y : i*32+16
@@ -73,6 +77,7 @@ function(game){
 							type : 'blast',
 							x : j*32,
 							y : i*32,
+							z : 10,
 							imageNo : parseInt((30+this.token.backgrndArray[i][j])/3)
 						});
 					this.token.backgrndArray[i][j]++;

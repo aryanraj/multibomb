@@ -21,9 +21,10 @@ function(enemy){
 				type : "enemy",
 				x : this.xcord,
 				y : this.ycord,
-				imageNo : this.imageIndex%4
+				z : 20,
+				imageNo : parseInt(this.imageIndex)%4
 			}
-		this.imageIndex++;
+		this.imageIndex+=0.3;
 		return result;
 	};
 
@@ -97,6 +98,7 @@ function(enemy){
 						type : "deadenemy",
 						x : obj.xcord,
 						y : obj.ycord,
+						z : 20,
 						imageNo : obj.deathCountdown--
 					});
 					if(obj.deathCountdown == 0)

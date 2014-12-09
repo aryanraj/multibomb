@@ -78,9 +78,9 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			var tt = (new Date()).getTime();
 			if(startTime == -1)
 				startTime = tt;
-			if((tt-startTime)<40*tCount)
+			if((tt-startTime)<30*tCount)
 				return;
-			if((tt-startTime)>40*(tCount+1))
+			if((tt-startTime)>30*(tCount+1))
 				clearInterval(iii);
 			tCount++;
 
