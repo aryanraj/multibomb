@@ -80,8 +80,11 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				startTime = tt;
 			if((tt-startTime)<30*tCount)
 				return;
-			// if((tt-startTime)>30*(tCount+1))
-			// 	clearInterval(iii);
+			if((tt-startTime)>30*(tCount+1)) {
+				clearInterval(iii);
+				alert("You missed some count. Kindly do not leave this tab in background. You can keep it in a new window active.")
+				location.reload();
+			}
 			tCount++;
 
 			if (38 in keysDown)	man[selfId].move = "up"; //up
