@@ -99,6 +99,13 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				}],
 				print : true
 			});
+			if(man[selfId].win)
+				clearInterval(iii);
+			if(!cGame.getMan("actual",selfId).alive && typeof cGame.getMan("actual",selfId).deathCountdown == "undefined") {
+				clearInterval(iii);
+				alert("you lose :(");
+				location.reload();
+			}
 			man[selfId] = {};
 		},5);
 	});

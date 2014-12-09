@@ -157,6 +157,7 @@ function(game){
 			}
 			for(j in this.center.dooropen){
 				if(dist(this.center.man[i],this.center.dooropen[j])<32) {
+					data.man[i].win = true;
 					alert("you win :D");
 					location.reload();
 					break;
@@ -218,6 +219,9 @@ function(game){
 			if(this.image && data.print)
 				this.image.render(this.printList);
 			// console.log(this.printList);
+		}
+		this.getMan = function(gameid,manid) {
+			return this.list[gameid].man.list[manid];
 		}
 		if(typeof data !== "undefined")
 			this.create(data);
