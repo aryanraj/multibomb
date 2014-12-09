@@ -205,13 +205,14 @@ function(man){
 
 		this.list = {};
 		this.count = 0;
+		this.aliveCount = 0;
 		this.create = function(data) {
 			if(typeof data.id !== "undefined")
 				data=[data];
 			var i;
 			for(i in data) {
 				this.list[data[i].id] = new object(data[i].x,data[i].y);
-				this.count++;
+				this.count++; this.aliveCount++;
 			}
 		}
 		this.getCenter = function() {
@@ -219,6 +220,7 @@ function(man){
 				center = {};
 			for(i in this.list) if(this.list[i].alive)
 				center[i]=this.list[i].getCenter();
+			this.aliveCount = Object.keys(center).length;
 			return center;
 		}
 		if(typeof d !== "undefined")
