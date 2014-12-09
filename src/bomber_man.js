@@ -8,7 +8,8 @@ function(man){
 	var object = function(x,y){
 		this.xcord = x;
 		this.ycord = y;
-		this.bombAllow = false;
+		this.moveOnBombAllow = false;
+		this.bombAllow = 0;
 		this.direct = "stand";
 		this.alive = true;
 		this.imageNo = 3;
@@ -33,11 +34,12 @@ function(man){
 			default:
 				this.imageIndex = 0;
 		}
-		if(this.imageIndex%2==0)
+		if(parseInt(this.imageIndex)%2==0)
 			result = {
 				type : "man",
 				x : this.xcord,
 				y : this.ycord,
+				z : 20,
 				imageNo : this.imageNo
 			}
 		else
@@ -45,9 +47,10 @@ function(man){
 				type : "man",
 				x : this.xcord,
 				y : this.ycord,
-				imageNo : this.imageNo+(this.imageIndex%4+1)/2
+				z : 20,
+				imageNo : this.imageNo+(parseInt(this.imageIndex)%4+1)/2
 			}
-		this.imageIndex++;
+		this.imageIndex+=0.3;
 		return result;
 	};
 
@@ -56,16 +59,16 @@ function(man){
 			yfactor = (this.ycord)/32,
 			leftmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] == 0 
 						|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] > 0
-								&& this.bombAllow) ? true : false ,
+								&& this.moveOnBombAllow) ? true : false ,
 			upmove = token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] == 0 
 						|| ( token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] > 0
-								&& this.bombAllow) ? true : false ,
+								&& this.moveOnBombAllow) ? true : false ,
 			rightmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] == 0
 						|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] > 0
-								&& this.bombAllow) ? true : false ,
+								&& this.moveOnBombAllow) ? true : false ,
 			downmove = token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] == 0 
 						|| ( token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] > 0
-								&& this.bombAllow) ? true : false ,
+								&& this.moveOnBombAllow) ? true : false ,
 			horimove = yfactor%2 == 1 ? true : false,
 			verimove = xfactor%2 == 1 ? true : false;
 
@@ -139,18 +142,21 @@ function(man){
 						}
 				break;
 			case "bomb":
-				if(token.backgrndArray[parseInt(yfactor+0.5)][parseInt(xfactor+0.5)] == 0){
-					token.backgrndArray[parseInt(yfactor+0.5)][parseInt(xfactor+0.5)] = 100 ;
-					this.bombAllow = true;
+				if(token.backgrndArray[parseInt(yfactor+0.5)][parseInt(xfactor+0.5)] == 0 && this.bombAllow==0){
+					this.bombAllow = token.backgrndArray[parseInt(yfactor+0.5)][parseInt(xfactor+0.5)] = 50 ;
+					this.moveOnBombAllow = true;
 				}
 				break;
 		}
-		if(this.bombAllow
+		if(this.moveOnBombAllow
 			&& token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.9999)] == 0
 			&& token.backgrndArray[parseInt(yfactor)][parseInt(xfactor)] == 0
 			&& token.backgrndArray[parseInt(yfactor+0.9999)][parseInt(xfactor)] == 0
 			&& token.backgrndArray[parseInt(yfactor)][parseInt(xfactor)] == 0)
-			this.bombAllow = false ;
+			this.moveOnBombAllow = false ;
+
+		if(this.bombAllow > 0)
+			this.bombAllow--;
 
 		this.direct = dir;
 		if(token.printList)
@@ -181,6 +187,7 @@ function(man){
 						type : "deadman",
 						x : obj.xcord,
 						y : obj.ycord,
+						z : 20,
 						imageNo : obj.deathCountdown--
 					})
 					if(obj.deathCountdown == 0)
