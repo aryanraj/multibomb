@@ -99,8 +99,11 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				}],
 				print : true
 			});
-			if(man[selfId].win)
+			if(man[selfId].win) {
 				clearInterval(iii);
+				alert("you win :D");
+				location.reload();
+			}
 			if(!cGame.getMan("actual",selfId).alive && typeof cGame.getMan("actual",selfId).deathCountdown == "undefined") {
 				clearInterval(iii);
 				alert("you lose :(");
