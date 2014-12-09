@@ -1,3 +1,4 @@
+"use strict";
 module.exports = function(data, user) {
 	var backgrndArray =[[-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2],
   				      	[-2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-2],
@@ -16,9 +17,11 @@ module.exports = function(data, user) {
   				      	[-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2]],
 	  	man = [],
 	  	enemy = [],
+        exitGate = [],
 	  	nMan = user.length,
 	  	nEnemy = data.nEnemy,
-	  	nBox = data.nBox;
+	  	nBox = data.nBox,
+        i,j;
 	var rand = function(n)   {
             return parseInt(Math.random()*n);
         };
@@ -64,8 +67,8 @@ module.exports = function(data, user) {
 
     //making Enemy
     for(i=0;i<nEnemy;){
-        xx = rand(19);
-        yy = rand(15);
+        var xx = rand(19),
+            yy = rand(15);
         if(backgrndArray[yy][xx] == 0) {
             var tenemy = {};
             tenemy.x = xx*32;
@@ -85,13 +88,25 @@ module.exports = function(data, user) {
         }
     }
 
+    //get num of gates
+    for(i=0;i<nMan;)
+    {
+        j = rand(nBox);
+        if(!(j in exitGate)) {
+            exitGate[j] = true;
+            i++;
+        }
+    }
     //Box Placer
     for(i=0;i<nBox;)
     {
         xx = rand(19);
         yy = rand(15);
         if(backgrndArray[yy][xx] == 0){
-            backgrndArray[yy][xx] = -3;
+            if(exitGate[i])
+                backgrndArray[yy][xx] = -4;
+            else
+                backgrndArray[yy][xx] = -3;
             i++;
         }
     }
