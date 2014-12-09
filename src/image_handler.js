@@ -12,6 +12,7 @@ function(img){
 			switch(that.type) {
 				case 'deadman':
 				case 'deadenemy':
+					that.scale = 60;
 				case 'enemy':
 				case 'man':
 					that.ycorr = 20+32-this.height;
@@ -43,7 +44,7 @@ function(img){
 		this.image = image;
 		this.imageName = imageName.split('.').slice(0,-1).join('.');
 		this.type = imageName.split('.')[0];
-		this.imageNo = imageName.split('.')[1] !== '' ? parseInt(imageName.split('.')[1]) :''; 
+		this.imageNo = imageName.split('.')[1] !== '' ? parseInt(imageName.split('.')[1]) :'';
 		image.src = "/images/"+imageName;
 	};
 	img.handler = function(d){
@@ -82,6 +83,12 @@ function(img){
 					o = new createjs.Bitmap(m.image);
 				o.x = list[i].x + m.xcorr;
 				o.y = list[i].y + m.ycorr;
+				if(m.imageNo == '' && m.scale){
+					o.scaleX = o.scaleY = 1-(function (k) {
+						return k * k * ( ( 2.5 + 1 ) * k - 2.5 );
+					})(1-list[i].imageNo/m.scale);
+					// console.log(list[i].imageNo/m.scale);
+				}
 				this.stage.addChild(o);
 			}
 			this.stage.update();

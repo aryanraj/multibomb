@@ -80,23 +80,15 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				startTime = tt;
 			if((tt-startTime)<40*tCount)
 				return;
+			if((tt-startTime)>40*(tCount+1))
+				clearInterval(iii);
 			tCount++;
 
-			if (38 in keysDown){
-				man[selfId].move = "up";
-			}	//up
-    		else if (40 in keysDown){
-				man[selfId].move = "down";
-			}	//down
-    		else if (37 in keysDown){
-				man[selfId].move = "left";
-			}	//left
-    		else if (39 in keysDown){
-				man[selfId].move = "right";
-			}	//right
-			if(32 in keysDown){
-				man[selfId].move = "bomb";
-			}	//bomb - space
+			if (38 in keysDown)	man[selfId].move = "up"; //up
+    		else if (40 in keysDown) man[selfId].move = "down";	//down
+    		else if (37 in keysDown) man[selfId].move = "left";	//left
+    		else if (39 in keysDown) man[selfId].move = "right"; //right
+			if(32 in keysDown) man[selfId].move = "bomb"; //bomb - space
 			cGame.execute({
 				actual : [{
 					man : man,

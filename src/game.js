@@ -21,7 +21,7 @@ function(game){
 		blastElement[ 0] = true;
 		x = parseInt(x);
 		y = parseInt(y);
-		this.token.backgrndArray[y][x] = -40;
+		this.token.backgrndArray[y][x] = -30;
 		if(this.token.backgrndArray[y-1][x] in blastElement)
 			this.token.backgrndArray[y-1][x] = -20;
 		if(this.token.backgrndArray[y+1][x] in blastElement)
@@ -73,10 +73,10 @@ function(game){
 							type : 'blast',
 							x : j*32,
 							y : i*32,
-							imageNo : parseInt((40+this.token.backgrndArray[i][j])/6)
+							imageNo : parseInt((30+this.token.backgrndArray[i][j])/3)
 						});
 					this.token.backgrndArray[i][j]++;
-					if(this.token.backgrndArray[i][j] == -3 || this.token.backgrndArray[i][j] == -23)
+					if(this.token.backgrndArray[i][j] == -11 || this.token.backgrndArray[i][j] == -21)
 						this.token.backgrndArray[i][j] = 0;
                 }
 			}
@@ -133,6 +133,7 @@ function(game){
 			this.man.move(data[i].man, this.token);
 			this.enemy.move(data[i].enemy, this.token);
 
+			// console.log(data[i]);
 			this.timeStamp[time-this.startTime] = data[i];
 			/*if(time-this.startTime>10000&&time-this.startTime<10050)
 				console.log(Object.keys(this.timeStamp).length);*/

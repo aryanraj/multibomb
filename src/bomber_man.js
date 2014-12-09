@@ -173,7 +173,7 @@ function(man){
 				// console.log(upd);
 				if(typeof upd == "undefined") upd = {};
 				if(typeof upd.alive !== "undefined" && !upd.alive && obj.alive) {
-					obj.deathCountdown=100;
+					obj.deathCountdown=60;
 					obj.alive=false;
 				}
 				if(typeof obj.deathCountdown !== "undefined") {
