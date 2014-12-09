@@ -11,7 +11,8 @@ function(game){
 		this.token = t;
 		this.timeStamp = {};
 		this.center = {
-			blast : []
+			blast : [],
+			dooropen : []
 		};
 	};
 
@@ -54,6 +55,7 @@ function(game){
 				z : 0
 			});
 		this.center.blast.length = 0;
+		this.center.dooropen.length = 0;
 		var i,j;
 		for(i in this.token.backgrndArray)
 			for(j in this.token.backgrndArray[i]) {
@@ -65,7 +67,10 @@ function(game){
 							y : i*32,
 							z : 10
 						});
-				if([-5].indexOf(this.token.backgrndArray[i][j]) != -1)
+				if([-5].indexOf(this.token.backgrndArray[i][j]) != -1) {
+					if(this.enemy.aliveCount == 0)
+						this.token.backgrndArray[i][j] = -6;
+					else
 					if(this.token.printList)
 						this.token.printList.push({
 							type : 'doorclose',
@@ -73,7 +78,8 @@ function(game){
 							y : i*32,
 							z : 10
 						});
-				if([-6].indexOf(this.token.backgrndArray[i][j]) != -1)
+				}
+				if([-6].indexOf(this.token.backgrndArray[i][j]) != -1) {
 					if(this.token.printList)
 						this.token.printList.push({
 							type : 'dooropen',
@@ -81,6 +87,11 @@ function(game){
 							y : i*32,
 							z : 10
 						});
+					this.center.dooropen.push({
+						x : j*32+16,
+						y : i*32+16
+					});
+				}
 				if(this.token.backgrndArray[i][j] > 10){
 					this.token.backgrndArray[i][j]--;
 					if(this.token.backgrndArray[i][j] == 10)
@@ -139,9 +150,15 @@ function(game){
 				}
 			}
 			for(j in this.center.blast){
-				//console.log(this.center.man[i],this.center.blast[j],dist(this.center.man[i],this.center.blast[j]));
 				if(dist(this.center.man[i],this.center.blast[j])<32) {
 					data.man[i].alive=false;
+					break;
+				}
+			}
+			for(j in this.center.dooropen){
+				if(dist(this.center.man[i],this.center.dooropen[j])<32) {
+					alert("you win :D");
+					location.reload();
 					break;
 				}
 			}
