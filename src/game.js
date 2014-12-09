@@ -18,19 +18,31 @@ function(game){
 	object.prototype.blastBomb = function(x,y) {
 		var blastElement = [];
 		blastElement[-3] = 
-		blastElement[-4] = 
 		blastElement[ 0] = true;
 		x = parseInt(x);
 		y = parseInt(y);
+
 		this.token.backgrndArray[y][x] = -30;
+
 		if(this.token.backgrndArray[y-1][x] in blastElement)
 			this.token.backgrndArray[y-1][x] = -20;
+		else if(this.token.backgrndArray[y-1][x] == -4)
+			this.token.backgrndArray[y-1][x] = -40;
+
 		if(this.token.backgrndArray[y+1][x] in blastElement)
 			this.token.backgrndArray[y+1][x] = -20;
+		else if(this.token.backgrndArray[y+1][x] == -4)
+			this.token.backgrndArray[y+1][x] = -40;
+
 		if(this.token.backgrndArray[y][x-1] in blastElement)
 			this.token.backgrndArray[y][x-1] = -20;
+		else if(this.token.backgrndArray[y][x-1] == -4)
+			this.token.backgrndArray[y][x-1] = -40;
+
 		if(this.token.backgrndArray[y][x+1] in blastElement)
 			this.token.backgrndArray[y][x+1] = -20;
+		else if(this.token.backgrndArray[y][x+1] == -4)
+			this.token.backgrndArray[y][x+1] = -40;
 	};
 
 	object.prototype.background = function() {
@@ -49,6 +61,22 @@ function(game){
 					if(this.token.printList)
 						this.token.printList.push({
 							type : 'box',
+							x : j*32,
+							y : i*32,
+							z : 10
+						});
+				if([-5].indexOf(this.token.backgrndArray[i][j]) != -1)
+					if(this.token.printList)
+						this.token.printList.push({
+							type : 'doorclose',
+							x : j*32,
+							y : i*32,
+							z : 10
+						});
+				if([-6].indexOf(this.token.backgrndArray[i][j]) != -1)
+					if(this.token.printList)
+						this.token.printList.push({
+							type : 'dooropen',
 							x : j*32,
 							y : i*32,
 							z : 10
@@ -72,7 +100,7 @@ function(game){
 						x : j*32+16,
 						y : i*32+16
 					});
-					if(this.token.printList && this.token.backgrndArray[i][j] < -20)
+					if(this.token.printList && this.token.backgrndArray[i][j] > -31 && this.token.backgrndArray[i][j] < -20)
 						this.token.printList.push({
 							type : 'blast',
 							x : j*32,
@@ -83,6 +111,8 @@ function(game){
 					this.token.backgrndArray[i][j]++;
 					if(this.token.backgrndArray[i][j] == -11 || this.token.backgrndArray[i][j] == -21)
 						this.token.backgrndArray[i][j] = 0;
+					if(this.token.backgrndArray[i][j] == -31)
+						this.token.backgrndArray[i][j] = -5;
                 }
 			}
 	};

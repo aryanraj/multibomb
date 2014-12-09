@@ -29,21 +29,22 @@ function(enemy){
 	};
 
 	object.prototype.move = function(token)	{
+			var allowedPath = [0,-5,-6];
 		switch(this.direct){
 			case 'left':
-				if(token.backgrndArray[parseInt(this.ycord/32)][parseInt(this.xcord/32-0.001)] == 0)
+				if(allowedPath.indexOf(token.backgrndArray[parseInt(this.ycord/32)][parseInt(this.xcord/32-0.001)]) != -1)
 					this.xcord -=token.enemySpeed;
 				break;
 			case 'right':
-				if(token.backgrndArray[parseInt(this.ycord/32)][parseInt(this.xcord/32+1.001)] == 0)
+				if(allowedPath.indexOf(token.backgrndArray[parseInt(this.ycord/32)][parseInt(this.xcord/32+1.001)]) != -1)
 					this.xcord +=token.enemySpeed;
 				break;
 			case 'up':
-				if(token.backgrndArray[parseInt(this.ycord/32-0.001)][parseInt(this.xcord/32)] == 0)
+				if(allowedPath.indexOf(token.backgrndArray[parseInt(this.ycord/32-0.001)][parseInt(this.xcord/32)]) != -1)
 					this.ycord -=token.enemySpeed;
 				break;
 			case 'down':
-				if(token.backgrndArray[parseInt(this.ycord/32+1.001)][parseInt(this.xcord/32)] == 0)
+				if(allowedPath.indexOf(token.backgrndArray[parseInt(this.ycord/32+1.001)][parseInt(this.xcord/32)]) != -1)
 					this.ycord +=token.enemySpeed;
 				break;
 		}

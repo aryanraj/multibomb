@@ -23,6 +23,8 @@ function(img){
 					that.xcorr = 16;
 					break;
 				case 'box':
+				case 'doorclose':
+				case 'dooropen':
 					that.ycorr = 20;
 					that.xcorr = 16;
 					break;

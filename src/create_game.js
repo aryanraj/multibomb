@@ -103,8 +103,10 @@ module.exports = function(data, user) {
         xx = rand(19);
         yy = rand(15);
         if(backgrndArray[yy][xx] == 0){
-            if(exitGate[i])
+            if(exitGate[i]) {
                 backgrndArray[yy][xx] = -4;
+                console.log(xx,yy);
+            }
             else
                 backgrndArray[yy][xx] = -3;
             i++;

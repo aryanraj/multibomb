@@ -57,16 +57,17 @@ function(man){
 	object.prototype.move = function(dir, token) {
 		var xfactor = (this.xcord)/32,
 			yfactor = (this.ycord)/32,
-			leftmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] == 0 
+			allowedPath = [0,-5,-6],
+			leftmove = allowedPath.indexOf(token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)]) != -1 
 						|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor-0.03125*token.manSpeed)] > 0
 								&& this.moveOnBombAllow) ? true : false ,
-			upmove = token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] == 0 
+			upmove = allowedPath.indexOf(token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)]) != -1 
 						|| ( token.backgrndArray[parseInt(yfactor-0.03125*token.manSpeed)][parseInt(xfactor)] > 0
 								&& this.moveOnBombAllow) ? true : false ,
-			rightmove = token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] == 0
+			rightmove = allowedPath.indexOf(token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)]) != -1
 						|| ( token.backgrndArray[parseInt(yfactor)][parseInt(xfactor+0.03125*token.manSpeed+0.9999)] > 0
 								&& this.moveOnBombAllow) ? true : false ,
-			downmove = token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] == 0 
+			downmove = allowedPath.indexOf(token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)]) != -1 
 						|| ( token.backgrndArray[parseInt(yfactor+0.03125*token.manSpeed+0.9999)][parseInt(xfactor)] > 0
 								&& this.moveOnBombAllow) ? true : false ,
 			horimove = yfactor%2 == 1 ? true : false,

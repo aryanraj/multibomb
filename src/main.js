@@ -80,8 +80,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				startTime = tt;
 			if((tt-startTime)<30*tCount)
 				return;
-			if((tt-startTime)>30*(tCount+1))
-				clearInterval(iii);
+			// if((tt-startTime)>30*(tCount+1))
+			// 	clearInterval(iii);
 			tCount++;
 
 			if (38 in keysDown)	man[selfId].move = "up"; //up
