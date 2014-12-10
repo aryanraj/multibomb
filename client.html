@@ -1,1 +1,13 @@
 <script type="text/javascript" data-main="/main" src="/requirejs/require.js"></script>
+<script type="text/javascript" src="/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#form').on('submit', function(e){
+			e.preventDefault();
+			io.connect().emit('form',$(this).serialize());
+			console.log($(this).serializeArray());
+		})
+	})
+</script>
+<form id="form"></form>
+<div id="message"></div>
