@@ -9,7 +9,7 @@ function(game){
 		this.man = b;
 		this.enemy = e;
 		this.token = t;
-		this.timeStamp = {};
+		this.timeStamp = [];
 		this.center = {
 			blast : [],
 			dooropen : []
@@ -184,10 +184,8 @@ function(game){
 			this.man.move(data[i].man, this.token);
 			this.enemy.move(data[i].enemy, this.token);
 
-			// console.log(data[i]);
-			this.timeStamp[time-this.startTime] = data[i];
-			/*if(time-this.startTime>10000&&time-this.startTime<10050)
-				console.log(Object.keys(this.timeStamp).length);*/
+			// console.log(JSON.stringify(data[i]));
+			this.timeStamp.push(data[i]);
 		}
 	};
 

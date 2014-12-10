@@ -1,5 +1,5 @@
 requirejs.config({
-	baseUrl : '',
+	baseUrl : '/',
 	waitSeconds : 30,
 	paths : {
 		bomberMan : "bomber_man",
@@ -45,9 +45,12 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 		man = {},
 		enemy = {},
 		keysDown = {},
-		selfId;
+		selfId,
+		lastEmit = JSON.stringify({});
+	
 	socket.emit("done");
-	socket.on("data", function(data){
+	socket.on("initialData", function(data){
+		console.log("got data");
 		cGame = new g.handler(new i.handler(data.images));
 		cGame.create({
 			b : new b.handler(data.man),
@@ -66,14 +69,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 		for(i in data.enemy) enemy[data.enemy[i].id] = {};
 		selfId = socket.socket.sessionid;
 
-		addEventListener("keydown",function (e) {
-    		keysDown[e.keyCode]=true;
-		}, false);
-
-		addEventListener("keyup",function (e) {
-    		delete keysDown[e.keyCode];
-		}, false);
-
+	});
+	socket.on('start',function(){
 		var iii = setInterval(function(){
 			var tt = (new Date()).getTime();
 			if(startTime == -1)
@@ -99,6 +96,14 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				}],
 				print : true
 			});
+
+			if(lastEmit != JSON.stringify(man[selfId]))
+				socket.emit("selfData",(function(c){
+					lastEmit = JSON.stringify(c);
+					c.time = tCount;
+					return c;
+				})(man[selfId]));
+
 			if(man[selfId].win) {
 				clearInterval(iii);
 				alert("you win :D");
@@ -112,4 +117,22 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			man[selfId] = {};
 		},5);
 	});
+	socket.on('data', function(data){
+		console.log(data);
+		for(var i in data)
+			for(var j in data[i])
+				man[j] = data[i][j]; 
+	})
+
+	socket.on('HTMLmessage', function(data){
+		for(var i in data) document.getElementById(i).innerHTML = data[i];
+	})
+
+	addEventListener("keydown",function (e) {
+		keysDown[e.keyCode]=true;
+	}, false);
+
+	addEventListener("keyup",function (e) {
+		delete keysDown[e.keyCode];
+	}, false);
 })
