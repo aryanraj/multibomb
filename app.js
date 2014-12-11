@@ -33,7 +33,11 @@ app.io.route('done', function(req) {
 				var level1 = createGame(cnf['1'],app.io.rooms['/'+req.session.game]);
 					level1.images = cnf["images"];
 					app.io.room(req.session.game).broadcast("initialData",level1);
-				games[req.session.game] = "start";
+				games[req.session.game] = {
+					lastEmit : 0,
+					move : []
+				};
+				app.io.room(req.session.game).broadcast('HTMLmessage',{message:'The game is about to start.<br /> Get ready!'});
 				setTimeout(function(){
 					app.io.room(req.session.game).broadcast('start');
 				}, 5000);
@@ -45,13 +49,20 @@ app.io.route('done', function(req) {
 });
 
 app.io.route('selfData', function(req) {
+	if(typeof games[req.session.game][req.data.time] == "undefined")
+		games[req.session.game][req.data.time] = {};
+
+	games[req.session.game][req.data.time][req.socket.id] = (function(a){
+		delete a.time;
+		return a;
+	})(JSON.parse(JSON.stringify(req.data)));
+
 	var data = {};
-		data[req.data.time] = {};
-		data[req.data.time][req.socket.id] = (function(a){
-			delete a.time;
-			return a;
-		})(req.data);
-	req.io.room(req.session.game).broadcast('data',data);
+	data[req.socket.id] = games[req.session.game][req.data.time][req.socket.id];
+
+	req.io.room(req.session.game).broadcast('data',{
+		now : data
+	});
 });
 
 app.io.route('disconnect', function(req){
