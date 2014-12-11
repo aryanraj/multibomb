@@ -80,7 +80,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			if((tt-startTime)>30*(tCount+1)) {
 				clearInterval(iii);
 				alert("You missed some count. Kindly do not leave this tab in background. You can keep it in a new window active.")
-				location.reload();
+				window.location=window.location.origin;
 			}
 			tCount++;
 
@@ -107,12 +107,12 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			if(man[selfId].win) {
 				clearInterval(iii);
 				alert("you win :D");
-				location.reload();
+				window.location=window.location.origin;
 			}
 			if(!cGame.getMan("actual",selfId).alive && typeof cGame.getMan("actual",selfId).deathCountdown == "undefined") {
 				clearInterval(iii);
 				alert("you lose :(");
-				location.reload();
+				window.location=window.location.origin;
 			}
 			man[selfId] = {};
 		},5);
@@ -125,7 +125,14 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 	})
 
 	socket.on('HTMLmessage', function(data){
-		for(var i in data) document.getElementById(i).innerHTML = data[i];
+		for(var i in data) {
+			if(~['message','form'].indexOf(i))
+				document.getElementById(i).innerHTML = data[i];
+			if(~['alert'].indexOf(i))
+				alert(data[i]);
+			if(~['redirect'].indexOf(i))
+				window.location = window.location[data[i]];
+		} 
 	})
 
 	addEventListener("keydown",function (e) {
