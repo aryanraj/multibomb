@@ -12,25 +12,27 @@ app.use(express.cookieParser());
 app.use(express.session({secret : 'G0t_sOm3_boMb5_1n_h4nd'}))
 
 app.io.route('done', function(req) {
-	var sess = typeof req.session.game != "undefined" ? req.session.game : req.session.game = req.socket.id;
-	req.io.join(sess);
-	typeof games[sess] == "undefined" ? games[sess] = 1 : games[sess]++;
-	if(sess == req.socket.id){
+	if(typeof req.session.game == "undefined") {
+		req.session.game = req.socket.id;
+		games[req.session.game] = "join";
+	}
+	req.io.join(req.session.game);
+	if(req.session.game == req.socket.id){
 		req.socket.emit('HTMLmessage',
-			{ form :'<p>Give this <a href="/join/'+sess+'">link</a> to your friends</p>\
+			{ form :'<p>Give this <a href="/join/'+req.session.game+'">link</a> to your friends</p>\
 			<input name="start" value="yes" style="display:none;"><button>Click if enough people have joined (max 4)</button>'});
 		req.socket.on('form', function(data){
-			var level1 = createGame(cnf['1'],app.io.rooms['/'+sess]);
+			var level1 = createGame(cnf['1'],app.io.rooms['/'+req.session.game]);
 				level1.images = cnf["images"];
-				app.io.room(sess).broadcast("initialData",level1);
+				app.io.room(req.session.game).broadcast("initialData",level1);
 			if(JSON.stringify(data) == "\"start=yes\"")
 				setTimeout(function(){
-					app.io.room(sess).broadcast('start');
+					app.io.room(req.session.game).broadcast('start');
 				}, 5000);
 		});
 	}
-	console.log(sess,app.io.rooms['/'+sess]);
-	app.io.room(sess).broadcast('HTMLmessage',{message:'Total players connected = '+games[sess]});
+	console.log(req.session.game,app.io.rooms['/'+req.session.game]);
+	app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+app.io.rooms['/'+req.session.game].length});
 });
 
 app.io.route('selfData', function(req) {
@@ -45,16 +47,22 @@ app.io.route('selfData', function(req) {
 
 app.io.route('disconnect', function(req){
 	console.log("destroying",req.socket.id);
+	// console.log(app.io.rooms['/'+req.session.game].length,app.io.rooms);
+	app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+(app.io.rooms['/'+req.session.game].length-1)});
 	req.session.destroy();
 })
 
 app.get('/', function(req,res) {
+	console.log("GET /",req.session);
+	if(typeof req.session.game !== "undefined") {
+		delete req.session.game;
+	}
 	res.sendfile(__dirname+'/client.html');
 });
 
 app.get('/join/:game', function(req,res){
-	if(req.params.game in games) {
-		if(typeof games[req.params.game] == "number"){
+	if('/'+req.params.game in app.io.rooms) {
+		if(games[req.params.game] == "join"){
 			res.sendfile(__dirname+'/client.html');
 			req.session.game = req.params.game;
 		} else {
