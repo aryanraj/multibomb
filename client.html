@@ -6,6 +6,7 @@
 			e.preventDefault();
 			io.connect().emit('form',$(this).serialize());
 			console.log($(this).serializeArray());
+			$(this).html('');
 		})
 	})
 </script>
