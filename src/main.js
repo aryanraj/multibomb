@@ -106,14 +106,10 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				})(man[selfId]));
 
 			if(man[selfId].win) {
-				clearInterval(intervalObject);
-				alert("you win :D");
-				window.location=window.location.origin;
+				document.getElementById('message').innerHTML = "you win :D";
 			}
 			if(!cGame.getMan("actual",selfId).alive && typeof cGame.getMan("actual",selfId).deathCountdown == "undefined") {
-				clearInterval(intervalObject);
-				alert("you lose :(");
-				window.location=window.location.origin;
+				document.getElementById('message').innerHTML = "you lose :(";
 			}
 			man[selfId] = {};
 		},5);
