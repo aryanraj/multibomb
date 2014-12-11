@@ -171,6 +171,25 @@ function(man){
 		};
 	};
 
+	object.prototype.snapshot = function() {
+		return {
+			xcord : this.xcord,
+			ycord : this.ycord,
+			moveOnBombAllow : this.moveOnBombAllow,
+			bombAllow : this.bombAllow,
+			direct : this.direct,
+			alive : this.alive,
+			imageNo : this.imageNo,
+			imageIndex : this.imageIndex
+		}
+	};
+
+	object.prototype.dataOverride = function(data) {
+		for(var i in data) {
+			this[i] = data[i];
+		}
+	}
+
 	man.handler = function(d) {
 		this.move = function(update, token) {
 			var i;
@@ -223,6 +242,20 @@ function(man){
 			this.aliveCount = Object.keys(center).length;
 			return center;
 		}
+		this.snapshot = function() {
+			var data = {};
+			for(var i in this.list) {
+				data[i] = this.list[i].snapshot();
+			}
+			return data;
+		}
+
+		this.dataOverride = function(data) {
+			for(var i in data) {
+				this.list[i].dataOverride(data[i]);
+			}
+		}
+
 		if(typeof d !== "undefined")
 			this.create(d);
 	}

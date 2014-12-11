@@ -219,6 +219,21 @@ function(game){
 		this.getMan = function(gameid,manid) {
 			return this.list[gameid].man.list[manid];
 		}
+		this.snapshot = function(id) {
+			return {
+				man : this.list[id].man.snapshot(),
+				enemy : this.list[id].enemy.snapshot(),
+				token : {
+					backgrndArray : JSON.parse(JSON.stringify(this.list[id].token.backgrndArray))
+				}
+			};
+		}
+		this.dataOverride = function(id, data) {
+			this.list[id].man.dataOverride(data.man);
+			this.list[id].enemy.dataOverride(data.enemy);
+			this.list[id].token.backgrndArray = data.token.backgrndArray;
+		}
+
 		if(typeof data !== "undefined")
 			this.create(data);
 	}
