@@ -15,6 +15,13 @@ app.io.route('done', function(req) {
 	if(typeof req.session.game == "undefined") {
 		req.session.game = req.socket.id;
 		games[req.session.game] = "join";
+	} else if(app.io.rooms['/'+req.session.game].length == 4) {
+		delete req.session.game;
+		req.socket.emit('HTMLmessage',{
+			alert : 'Maximum Player limit reached. Create another game if you want.',
+			redirect : 'origin'
+		});
+		return;
 	}
 	req.io.join(req.session.game);
 	if(req.session.game == req.socket.id){
@@ -22,13 +29,15 @@ app.io.route('done', function(req) {
 			{ form :'<p>Give this <a href="/join/'+req.session.game+'">link</a> to your friends</p>\
 			<input name="start" value="yes" style="display:none;"><button>Click if enough people have joined (max 4)</button>'});
 		req.socket.on('form', function(data){
-			var level1 = createGame(cnf['1'],app.io.rooms['/'+req.session.game]);
-				level1.images = cnf["images"];
-				app.io.room(req.session.game).broadcast("initialData",level1);
-			if(JSON.stringify(data) == "\"start=yes\"")
+			if(JSON.stringify(data) == "\"start=yes\"") {
+				var level1 = createGame(cnf['1'],app.io.rooms['/'+req.session.game]);
+					level1.images = cnf["images"];
+					app.io.room(req.session.game).broadcast("initialData",level1);
+				games[req.session.game] = "start";
 				setTimeout(function(){
 					app.io.room(req.session.game).broadcast('start');
 				}, 5000);
+			}
 		});
 	}
 	console.log(req.session.game,app.io.rooms['/'+req.session.game]);
@@ -48,7 +57,8 @@ app.io.route('selfData', function(req) {
 app.io.route('disconnect', function(req){
 	console.log("destroying",req.socket.id);
 	// console.log(app.io.rooms['/'+req.session.game].length,app.io.rooms);
-	app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+(app.io.rooms['/'+req.session.game].length-1)});
+	if(typeof req.session.game !== "undefined")
+		app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+(app.io.rooms['/'+req.session.game].length-1)});
 	req.session.destroy();
 })
 
@@ -66,7 +76,7 @@ app.get('/join/:game', function(req,res){
 			res.sendfile(__dirname+'/client.html');
 			req.session.game = req.params.game;
 		} else {
-			res.send('Oh so sad, you did not get a chance to join the game ' + req.params.game + ' :(');
+			res.send('<script>alert("Oh so sad, you did not get a chance to join the game room :("); window.location=window.location.origin;</script>');
 		}
 	}
 	else
