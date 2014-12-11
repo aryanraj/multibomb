@@ -45,7 +45,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 		man = {},
 		enemy = {},
 		keysDown = {},
-		selfId,
+		selfId, intervalObject,
 		lastEmit = JSON.stringify({});
 	
 	socket.emit("done");
@@ -71,14 +71,15 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 
 	});
 	socket.on('start',function(){
-		var iii = setInterval(function(){
+		console.log('game started');
+		intervalObject = setInterval(function(){
 			var tt = (new Date()).getTime();
 			if(startTime == -1)
 				startTime = tt;
 			if((tt-startTime)<30*tCount)
 				return;
 			if((tt-startTime)>30*(tCount+1)) {
-				clearInterval(iii);
+				clearInterval(intervalObject);
 				alert("You missed some count. Kindly do not leave this tab in background. You can keep it in a new window active.")
 				window.location=window.location.origin;
 			}
@@ -105,12 +106,12 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				})(man[selfId]));
 
 			if(man[selfId].win) {
-				clearInterval(iii);
+				clearInterval(intervalObject);
 				alert("you win :D");
 				window.location=window.location.origin;
 			}
 			if(!cGame.getMan("actual",selfId).alive && typeof cGame.getMan("actual",selfId).deathCountdown == "undefined") {
-				clearInterval(iii);
+				clearInterval(intervalObject);
 				alert("you lose :(");
 				window.location=window.location.origin;
 			}
