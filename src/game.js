@@ -233,6 +233,9 @@ function(game){
 			this.list[id].enemy.dataOverride(data.enemy);
 			this.list[id].token.backgrndArray = data.token.backgrndArray;
 		}
+		this.getTimestamp = function(id,start,end) {
+			return JSON.parse(JSON.stringify(this.list[id].timeStamp)).slice(start,end);
+		}
 
 		if(typeof data !== "undefined")
 			this.create(data);
