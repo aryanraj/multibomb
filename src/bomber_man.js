@@ -203,13 +203,14 @@ function(man){
 					obj.alive=false;
 				}
 				if(typeof obj.deathCountdown !== "undefined") {
+					obj.deathCountdown--;
 					if(typeof token.printList !== "undefined")
 						token.printList.push({
 							type : "deadman",
 							x : obj.xcord,
 							y : obj.ycord,
 							z : 20,
-							imageNo : obj.deathCountdown--
+							imageNo : obj.deathCountdown
 						})
 					if(obj.deathCountdown == 0)
 						delete obj.deathCountdown;

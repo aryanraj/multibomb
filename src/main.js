@@ -100,6 +100,17 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 					this.data.tCount++;
 					if(this.data.tCount > tCount)
 						return;
+					var tman = JSON.parse(JSON.stringify(this.data.man));
+					for(var i in this.data.man) {
+						this.data.man[i] = {};
+						if(i in data) {
+							if("move" in data[i])
+								this.data.man[i].move = data[i].move;
+						} else {
+							if("move" in tman[i])
+								this.data.man[i].move = tman[i].move;
+						}
+					}
 					for(var i in data)
 						this.data.man[i] = data[i];
 					cGame.execute({
