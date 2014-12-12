@@ -160,8 +160,9 @@ function(man){
 			this.bombAllow--;
 
 		this.direct = dir;
+		var temp = this.printMan(dir);
 		if(token.printList)
-			token.printList.push(this.printMan(dir));
+			token.printList.push(temp);
 	};
 
 	object.prototype.getCenter = function() {
@@ -203,13 +204,14 @@ function(man){
 					obj.alive=false;
 				}
 				if(typeof obj.deathCountdown !== "undefined") {
-					token.printList.push({
-						type : "deadman",
-						x : obj.xcord,
-						y : obj.ycord,
-						z : 20,
-						imageNo : obj.deathCountdown--
-					})
+					if(typeof token.printList !== "undefined")
+						token.printList.push({
+							type : "deadman",
+							x : obj.xcord,
+							y : obj.ycord,
+							z : 20,
+							imageNo : obj.deathCountdown--
+						})
 					if(obj.deathCountdown == 0)
 						delete obj.deathCountdown;
 				}

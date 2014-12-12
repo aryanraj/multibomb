@@ -48,8 +48,9 @@ function(enemy){
 					this.ycord +=token.enemySpeed;
 				break;
 		}
+		var temp = this.printEnemy();
 		if(token.printList)
-			token.printList.push(this.printEnemy());
+			token.printList.push(temp);
 		this.automator();
 	};
 
@@ -114,13 +115,14 @@ function(enemy){
 					obj.alive=false;
 				}
 				if(typeof obj.deathCountdown !== "undefined"){
-					token.printList.push({
-						type : "deadenemy",
-						x : obj.xcord,
-						y : obj.ycord,
-						z : 20,
-						imageNo : obj.deathCountdown--
-					});
+					if(typeof token.printList != "undefined")
+						token.printList.push({
+							type : "deadenemy",
+							x : obj.xcord,
+							y : obj.ycord,
+							z : 20,
+							imageNo : obj.deathCountdown--
+						});
 					if(obj.deathCountdown == 0)
 						delete obj.deathCountdown;
 				}
