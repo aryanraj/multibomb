@@ -94,6 +94,9 @@ function(enemy){
 	};
 
 	object.prototype.dataOverride = function(data) {
+		for(var i in this)
+			if(!(i in data))
+				delete this[i];
 		for(var i in data) {
 			this[i] = data[i];
 		}
