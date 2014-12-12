@@ -173,16 +173,12 @@ function(man){
 	};
 
 	object.prototype.snapshot = function() {
-		return {
-			xcord : this.xcord,
-			ycord : this.ycord,
-			moveOnBombAllow : this.moveOnBombAllow,
-			bombAllow : this.bombAllow,
-			direct : this.direct,
-			alive : this.alive,
-			imageNo : this.imageNo,
-			imageIndex : this.imageIndex
+		var l = {};
+		for(var i in this) {
+			if(!~['object','function'].indexOf(typeof this[i]))
+				l[i] = this[i];
 		}
+		return l;
 	};
 
 	object.prototype.dataOverride = function(data) {

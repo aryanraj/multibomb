@@ -85,16 +85,12 @@ function(enemy){
 	};
 
 	object.prototype.snapshot = function() {
-		return {
-			xcord : this.xcord,
-			ycord : this.ycord,
-			xtemp : this.xtemp,
-			ytemp : this.ytemp,
-			direct : this.direct,
-			alive : this.alive,
-			prevMove : this.prevMove,
-			imageIndex : this.imageIndex
+		var l = {};
+		for(var i in this) {
+			if(!~['object','function'].indexOf(typeof this[i]))
+				l[i] = this[i];
 		}
+		return l;
 	};
 
 	object.prototype.dataOverride = function(data) {
