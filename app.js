@@ -33,10 +33,7 @@ app.io.route('done', function(req) {
 				var level1 = createGame(cnf['1'],app.io.rooms['/'+req.session.game]);
 					level1.images = cnf["images"];
 					app.io.room(req.session.game).broadcast("initialData",level1);
-				games[req.session.game] = {
-					lastEmit : 0,
-					move : []
-				};
+				games[req.session.game] = {};
 				app.io.room(req.session.game).broadcast('HTMLmessage',{message:'The game is about to start.<br /> Get ready!'});
 				setTimeout(function(){
 					app.io.room(req.session.game).broadcast('start');
@@ -44,7 +41,7 @@ app.io.route('done', function(req) {
 			}
 		});
 	}
-	console.log(req.session.game,app.io.rooms['/'+req.session.game]);
+	// console.log(req.session.game,app.io.rooms['/'+req.session.game]);
 	app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+app.io.rooms['/'+req.session.game].length});
 });
 
@@ -52,21 +49,17 @@ app.io.route('selfData', function(req) {
 	if(typeof games[req.session.game][req.data.time] == "undefined")
 		games[req.session.game][req.data.time] = {};
 
-	games[req.session.game][req.data.time][req.socket.id] = (function(a){
-		delete a.time;
-		return a;
-	})(JSON.parse(JSON.stringify(req.data)));
-
-	var data = {};
-	data[req.socket.id] = games[req.session.game][req.data.time][req.socket.id];
+	games[req.session.game][req.data.time][req.socket.id] = req.data.data;
 
 	req.io.room(req.session.game).broadcast('data',{
-		now : data
+		id : req.socket.id,
+		time : req.data.time,
+		data : req.data.data
 	});
 });
 
 app.io.route('disconnect', function(req){
-	console.log("destroying",req.socket.id);
+	// console.log("destroying",req.socket.id);
 	// console.log(app.io.rooms['/'+req.session.game].length,app.io.rooms);
 	if(typeof req.session.game !== "undefined")
 		app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+(app.io.rooms['/'+req.session.game].length-1)});
@@ -74,7 +67,7 @@ app.io.route('disconnect', function(req){
 })
 
 app.get('/', function(req,res) {
-	console.log("GET /",req.session);
+	// console.log("GET /",req.session);
 	if(typeof req.session.game !== "undefined") {
 		delete req.session.game;
 	}

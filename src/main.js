@@ -8,7 +8,8 @@ requirejs.config({
 		game : "game",
 		easeljs : "easeljs/lib/easeljs-0.7.1.combined",
 		socketio : "socket.io/socket.io",
-		underscore : "underscore/underscore"
+		underscore : "underscore/underscore",
+		interproc : "intervalProcess"
 	},
 	shim : {
 		game : {
@@ -37,7 +38,7 @@ requirejs.config({
 	}
 });
 
-require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], function (g,b,e,i,_) {
+require(['game','bomberMan','enemy','imageHandler','underscore','interproc','socketio'], function (g,b,e,i,_,interproc) {
 	var socket = io.connect(),
 		cGame,
 		tCount = 0,
@@ -46,11 +47,17 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 		enemy = {},
 		keysDown = {},
 		selfId, intervalObject,
-		lastEmit = JSON.stringify({});
+		serverData = [],
+		lastEmit = JSON.stringify({}),
+		gameInitialData;
 	
 	socket.emit("done");
 	socket.on("initialData", function(data){
+		
 		console.log("got data");
+		
+		gameInitialData = JSON.parse(JSON.stringify(data));
+
 		cGame = new g.handler(new i.handler(data.images));
 		cGame.create({
 			b : new b.handler(data.man),
@@ -59,17 +66,50 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 			id : "actual",
 			printable : true
 		});
-		cGame.create({
-			b : new b.handler(data.man),
-			e : new e.handler(data.enemy),
-			t : JSON.parse(JSON.stringify(data.token)),
-			id : "server"
-		});
 		for(i in data.man) man[data.man[i].id] = {};
 		for(i in data.enemy) enemy[data.enemy[i].id] = {};
 		selfId = socket.socket.sessionid;
 
+		interproc.create({
+			name : "server",
+			repeat : true,
+			config : {
+				iterativeData : serverData,
+				initialization : function(){
+					cGame.create({
+						b : new b.handler(gameInitialData.man),
+						e : new e.handler(gameInitialData.enemy),
+						t : JSON.parse(JSON.stringify(gameInitialData.token)),
+						id : "server",
+						printable : false
+					});
+					this.data.man = {};
+					this.data.enemy = {};
+					this.data.count = 0;
+					for(i in gameInitialData.man) this.data.man[gameInitialData.man[i].id] = {};
+					for(i in gameInitialData.enemy) this.data.enemy[gameInitialData.enemy[i].id] = {};
+				},
+				exec : function(data) {
+					this.data.tCount++;
+					if(this.data.tCount > tCount)
+						return;
+					for(var i in data)
+						this.data.man[i] = data[i];
+					cGame.execute({
+						server : [{
+							man : this.data.man,
+							enemy : this.data.enemy
+						}],
+						print : false
+					});
+				},
+				end : function() {
+					cGame.dataOverride("actual",cGame.snapshot("server"));
+				}
+			}
+		});
 	});
+
 	socket.on('start',function(){
 		console.log('game started');
 		intervalObject = setInterval(function(){
@@ -80,8 +120,9 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				return;
 			if((tt-startTime)>30*(tCount+1)) {
 				clearInterval(intervalObject);
-				alert("You missed some count. Kindly do not leave this tab in background. You can keep it in a new window active.")
-				window.location=window.location.origin;
+				alert("You missed some count. Kindly do not leave this tab in background. You can keep it in a new window active.");
+				console.log(JSON.stringify(serverData));
+				// window.location=window.location.origin;
 			}
 			tCount++;
 
@@ -98,12 +139,17 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				print : true
 			});
 
-			if(lastEmit != JSON.stringify(man[selfId]))
-				socket.emit("selfData",(function(c){
-					lastEmit = JSON.stringify(c);
-					c.time = tCount;
-					return c;
-				})(man[selfId]));
+			if(typeof serverData[tCount-1] == "undefined")
+				serverData.push({});
+			
+			if(lastEmit != JSON.stringify(man[selfId])) {
+				lastEmit = JSON.stringify(man[selfId]);
+				socket.emit("selfData",{
+					time : tCount-1,
+					data : man[selfId]
+				})
+				serverData[tCount-1][selfId] = JSON.parse(JSON.stringify(man[selfId]));
+			}
 
 			if(man[selfId].win) {
 				document.getElementById('message').innerHTML = "you win :D";
@@ -112,14 +158,18 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				document.getElementById('message').innerHTML = "you lose :(";
 			}
 			man[selfId] = {};
+
+			interproc.execute(startTime+tCount*30-2, "server");
+
 		},5);
 	});
+
 	socket.on('data', function(data){
-		console.log(data);
-		for(var i in data)
-			for(var j in data[i])
-				man[j] = data[i][j]; 
-	})
+		man[data.id] = data.data;
+		while(typeof serverData[data.time] == "undefined")
+			serverData.push({});
+		serverData[data.time][data.id] = JSON.parse(JSON.stringify(data.data));
+	});
 
 	socket.on('HTMLmessage', function(data){
 		for(var i in data) {
@@ -129,7 +179,9 @@ require(['game','bomberMan','enemy','imageHandler','underscore','socketio'], fun
 				alert(data[i]);
 			if(~['redirect'].indexOf(i))
 				window.location = window.location[data[i]];
-		} 
+			if(~['log','info','warn','debug','error'].indexOf(i))
+				console[i](data[i]);
+		}
 	})
 
 	addEventListener("keydown",function (e) {
