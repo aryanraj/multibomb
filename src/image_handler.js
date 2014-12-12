@@ -5,7 +5,7 @@
 	else factory(global);
 })(typeof window === "object" ? window.GameImage={} : module.exports = {},
 function(img){
-	var object = function(imageName){
+	var object = function(imageName, cb){
 		var image = new Image(),
 			that = this;
 		image.onload = function() {
@@ -37,6 +37,7 @@ function(img){
 					that.xcorr = 0;
 					break;
 			}
+			cb();
 		}
 		this.image = image;
 		this.imageName = imageName.split('.').slice(0,-1).join('.');
@@ -44,7 +45,7 @@ function(img){
 		this.imageNo = imageName.split('.')[1] !== '' ? parseInt(imageName.split('.')[1]) :'';
 		image.src = "/images/"+imageName;
 	};
-	img.handler = function(d){
+	img.handler = function(d,cb){
 		this.list = {};
 		this.count = 0;
 		this.canvas = (function (w,h){
@@ -54,12 +55,16 @@ function(img){
 			return c;
 		})(640,480);
 		this.stage = new createjs.Stage(this.canvas);
-		this.create = function(names) {
+		this.create = function(names,cb) {
 			if(typeof names === "string")
 				names = [names];
-			var i;
+			var i, loaded = 0;
 			for(i in names){
-				this.list[this.count] = new object(names[i]);
+				this.list[this.count] = new object(names[i],function(){
+					loaded++;
+					if(loaded == names.length)
+						cb();
+				});
 				this.count++;
 			}
 		}
@@ -91,6 +96,6 @@ function(img){
 			this.stage.update();
 		}
 		if(typeof d !== "undefined")
-			this.create(d);
+			this.create(d,cb);
 	}
 })

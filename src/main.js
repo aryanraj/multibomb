@@ -49,16 +49,23 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 		selfId, intervalObject,
 		serverData = [],
 		lastEmit = JSON.stringify({}),
-		gameInitialData;
+		gameInitialData, images;
 	
-	socket.emit("done");
+	socket.emit('getImages');
+
+	socket.on('images', function(data){
+		images = new i.handler(data, function(){
+			socket.emit("done");
+		});
+	});
+
 	socket.on("initialData", function(data){
 		
 		console.log("got data");
 		
 		gameInitialData = JSON.parse(JSON.stringify(data));
 
-		cGame = new g.handler(new i.handler(data.images));
+		cGame = new g.handler(images);
 		cGame.create({
 			b : new b.handler(data.man),
 			e : new e.handler(data.enemy),

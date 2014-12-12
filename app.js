@@ -30,9 +30,7 @@ app.io.route('done', function(req) {
 			<input name="start" value="yes" style="display:none;"><button>Click if enough people have joined (max 4)</button>'});
 		req.socket.on('form', function(data){
 			if(JSON.stringify(data) == "\"start=yes\"") {
-				var level1 = createGame(cnf['1'],app.io.rooms['/'+req.session.game]);
-					level1.images = cnf["images"];
-					app.io.room(req.session.game).broadcast("initialData",level1);
+				app.io.room(req.session.game).broadcast("initialData",createGame(cnf['1'],app.io.rooms['/'+req.session.game]));
 				games[req.session.game] = {};
 				app.io.room(req.session.game).broadcast('HTMLmessage',{message:'The game is about to start.<br /> Get ready!'});
 				setTimeout(function(){
@@ -41,7 +39,7 @@ app.io.route('done', function(req) {
 			}
 		});
 	}
-	// console.log(req.session.game,app.io.rooms['/'+req.session.game]);
+	console.log(req.session.game,app.io.rooms['/'+req.session.game]);
 	app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+app.io.rooms['/'+req.session.game].length});
 });
 
@@ -58,11 +56,17 @@ app.io.route('selfData', function(req) {
 	});
 });
 
+app.io.route('getImages', function(req){
+	req.socket.emit('images',cnf['images']);
+});
+
 app.io.route('disconnect', function(req){
 	// console.log("destroying",req.socket.id);
 	// console.log(app.io.rooms['/'+req.session.game].length,app.io.rooms);
-	if(typeof req.session.game !== "undefined")
-		app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+(app.io.rooms['/'+req.session.game].length-1)});
+	if(typeof req.session.game !== "undefined") {
+		if(games[req.session.game] == "join")
+			app.io.room(req.session.game).broadcast('HTMLmessage',{message:'Total players connected = '+(app.io.rooms['/'+req.session.game].length-1)});
+	}
 	req.session.destroy();
 })
 
