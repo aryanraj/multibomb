@@ -6,7 +6,7 @@ requirejs.config({
 		enemy : "enemy",
 		imageHandler : "image_handler",
 		game : "game",
-		easeljs : "easeljs/lib/easeljs-0.7.1.combined",
+		easeljs : "easeljs/lib/easeljs-0.8.0.combined",
 		socketio : "socket.io/socket.io",
 		underscore : "underscore/underscore",
 		interproc : "intervalProcess"
