@@ -36,6 +36,8 @@ module.exports = function(data, user) {
             backgrndArray[13][1] = -5;
             backgrndArray[13][2] = -5;
             backgrndArray[12][1] = -5;
+            backgrndArray[13][3] = -3;
+            backgrndArray[11][1] = -3;
         case 3:
             var tman = {};
             tman.x = 17*32;
@@ -45,6 +47,8 @@ module.exports = function(data, user) {
             backgrndArray[1][17] = -5;
             backgrndArray[1][16] = -5;
             backgrndArray[2][17] = -5;
+            backgrndArray[1][15] = -3;
+            backgrndArray[3][17] = -3;
         case 2:
             var tman = {};
             tman.x = 17*32;
@@ -54,6 +58,8 @@ module.exports = function(data, user) {
             backgrndArray[13][17] = -5;
             backgrndArray[13][16] = -5;
             backgrndArray[12][17] = -5;
+            backgrndArray[13][15] = -3;
+            backgrndArray[11][17] = -3;
         case 1:
             var tman = {};
             tman.x = 32;
@@ -63,6 +69,8 @@ module.exports = function(data, user) {
             backgrndArray[1][1] = -5;
             backgrndArray[1][2] = -5;
             backgrndArray[2][1] = -5;
+            backgrndArray[1][3] = -3;
+            backgrndArray[3][1] = -3;
     }
 
     //making Enemy
@@ -91,14 +99,14 @@ module.exports = function(data, user) {
     //get num of gates
     for(i=0;i<nMan;)
     {
-        j = rand(nBox);
+        j = rand(nBox-2*nMan);
         if(!(j in exitGate)) {
             exitGate[j] = true;
             i++;
         }
     }
     //Box Placer
-    for(i=0;i<nBox;)
+    for(i=0;i<nBox-2*nMan;)
     {
         xx = rand(19);
         yy = rand(15);
