@@ -46,7 +46,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 		man,
 		enemy,
 		keysDown,
-		selfId, intervalObject,
+		selfId,
+		intervalObject,
 		serverData,
 		lastEmit,
 		gameInitialData,
@@ -63,6 +64,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	socket.on("initialData", function(data){
 		
 		console.log("got data");
+		if(typeof intervalObject != "undefined")
+			clearInterval(intervalObject);
 
 		tCount = 0;
 		startTime = -1;

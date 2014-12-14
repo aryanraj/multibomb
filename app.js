@@ -32,6 +32,18 @@ app.io.route('done', function(req) {
 				games[req.session.game] = {};
 				app.io.room(req.session.game).broadcast('HTMLmessage',{message:'The game is about to start.<br /> Get ready!'});
 				setTimeout(function(){
+					req.socket.emit('HTMLmessage',
+						{ form :'<input name="restart" value="yes" style="display:none;"><button>Click to restart the game</button>'});
+					app.io.room(req.session.game).broadcast('start');
+				}, 5000);
+			}
+			if(JSON.stringify(data) == "\"restart=yes\"") {
+				app.io.room(req.session.game).broadcast("initialData",createGame(cnf['1'],app.io.rooms['/'+req.session.game]));
+				games[req.session.game] = {};
+				app.io.room(req.session.game).broadcast('HTMLmessage',{message:'The game is about to start again.<br /> Get ready!'});
+				setTimeout(function(){
+					req.socket.emit('HTMLmessage',
+						{ form :'<input name="restart" value="yes" style="display:none;"><button>Click to restart the game</button>'});
 					app.io.room(req.session.game).broadcast('start');
 				}, 5000);
 			}
