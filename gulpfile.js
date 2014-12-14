@@ -12,7 +12,6 @@ var gulp 			= require('gulp'),
 
 gulp.task('bower', function(){
 	var mainFilter = gulpFilter(['*','!**/main.js']);
-	bower();
 	switch(process.env.NODE_ENV) {
 		case "production":
 		case "development":

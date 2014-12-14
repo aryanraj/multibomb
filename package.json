@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "postinstall": "./node_modules/gulp/bin/gulp.js default && ./node_modules/gulp/bin/gulp.js requirejsBuild"
+    "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/gulp/bin/gulp.js default && ./node_modules/gulp/bin/gulp.js requirejsBuild"
   },
   "dependencies": {
     "express.io": "^1.1.13",
