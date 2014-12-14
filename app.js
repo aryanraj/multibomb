@@ -5,9 +5,7 @@ var express=require('express.io'),
 	cnf = require(__dirname+'/config/levels'),
 	games = {};
 
-app.use(express.static(__dirname+'/src'));
 app.use(express.static(__dirname+'/public'));
-app.use(express.static(__dirname+'/bower_components'));
 app.use(express.cookieParser());
 app.use(express.session({secret : 'G0t_sOm3_boMb5_1n_h4nd'}))
 

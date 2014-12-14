@@ -2,14 +2,14 @@ requirejs.config({
 	baseUrl : '/',
 	waitSeconds : 0,
 	paths : {
-		bomberMan : "bomber_man",
-		enemy : "enemy",
-		imageHandler : "image_handler",
-		game : "game",
-		easeljs : "easeljs/lib/easeljs-0.8.0.combined",
+		bomberMan : "src/bomber_man",
+		enemy : "src/enemy",
+		imageHandler : "src/image_handler",
+		game : "src/game",
+		easeljs : "lib/easel",
 		socketio : "socket.io/socket.io",
-		underscore : "underscore/underscore",
-		interproc : "intervalProcess"
+		underscore : "lib/underscore",
+		interproc : "src/intervalProcess"
 	},
 	shim : {
 		game : {
