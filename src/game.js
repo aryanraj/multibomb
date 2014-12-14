@@ -189,55 +189,51 @@ function(game){
 		}
 	};
 
-	game.handler = function(images, data) {
-		if(typeof images !== "undefined"){
-			this.image = images;
-			this.image.onDocumentLoad();
-		}
-		this.list = {};
-		this.count = 0;
-		this.printList = [];
-		this.create = function(objs) {
-			if(!("push" in objs))
-				objs = [objs];
-			var i;
-			for(i in objs) {
-				if(objs[i].printable)
-					objs[i].t.printList = this.printList;
-				this.list[objs[i].id] = new object(objs[i].b,objs[i].e,objs[i].t);
-				this.count++;
-			}
-		}
-		this.execute = function(data) {
-			var i;
-			this.printList.length = 0;
-			for(i in this.list)	if(i in data) this.list[i].execute(data[i]);
-			if(this.image && data.print)
-				this.image.render(this.printList);
-			// console.log(this.printList);
-		}
-		this.getMan = function(gameid,manid) {
-			return this.list[gameid].man.list[manid];
-		}
-		this.snapshot = function(id) {
-			return {
-				man : this.list[id].man.snapshot(),
-				enemy : this.list[id].enemy.snapshot(),
-				token : {
-					backgrndArray : JSON.parse(JSON.stringify(this.list[id].token.backgrndArray))
-				}
-			};
-		}
-		this.dataOverride = function(id, data) {
-			this.list[id].man.dataOverride(data.man);
-			this.list[id].enemy.dataOverride(data.enemy);
-			this.list[id].token.backgrndArray = data.token.backgrndArray;
-		}
-		this.getTimestamp = function(id,start,end) {
-			return JSON.parse(JSON.stringify(this.list[id].timeStamp)).slice(start,end);
-		}
-
-		if(typeof data !== "undefined")
-			this.create(data);
+	game.list = {};
+	game.count = 0;
+	game.printList = [];
+	game.addImage = function(images) {
+		game.image = images;
+		game.image.onDocumentLoad();
 	}
+	game.create = function(objs) {
+		if(!("push" in objs))
+			objs = [objs];
+		var i;
+		for(i in objs) {
+			if(objs[i].printable)
+				objs[i].t.printList = game.printList;
+			game.list[objs[i].id] = new object(objs[i].b,objs[i].e,objs[i].t);
+			game.count++;
+		}
+	}
+	game.execute = function(data) {
+		var i;
+		game.printList.length = 0;
+		for(i in game.list)	if(i in data) game.list[i].execute(data[i]);
+		if(game.image && data.print)
+			game.image.render(game.printList);
+		// console.log(game.printList);
+	}
+	game.getMan = function(gameid,manid) {
+		return game.list[gameid].man.list[manid];
+	}
+	game.snapshot = function(id) {
+		return {
+			man : game.list[id].man.snapshot(),
+			enemy : game.list[id].enemy.snapshot(),
+			token : {
+				backgrndArray : JSON.parse(JSON.stringify(game.list[id].token.backgrndArray))
+			}
+		};
+	}
+	game.dataOverride = function(id, data) {
+		game.list[id].man.dataOverride(data.man);
+		game.list[id].enemy.dataOverride(data.enemy);
+		game.list[id].token.backgrndArray = data.token.backgrndArray;
+	}
+	game.getTimestamp = function(id,start,end) {
+		return JSON.parse(JSON.stringify(game.list[id].timeStamp)).slice(start,end);
+	}
+
 })

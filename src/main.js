@@ -38,14 +38,14 @@ requirejs.config({
 	}
 });
 
-require(['game','bomberMan','enemy','imageHandler','underscore','interproc','socketio'], function (g,b,e,i,_,interproc) {
+require(['game','bomberMan','enemy','imageHandler','underscore','interproc','socketio'], function (cGame,b,e,i,_,interproc) {
 	var socket = io.connect(),
 		cGame,
 		tCount,
 		startTime,
 		man,
 		enemy,
-		keysDown,
+		keysDown = {},
 		selfId,
 		intervalObject,
 		serverData,
@@ -59,6 +59,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 		images = new i.handler(data, function(){
 			socket.emit("done");
 		});
+		cGame.addImage(images);
 	});
 
 	socket.on("initialData", function(data){
@@ -71,13 +72,11 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 		startTime = -1;
 		man = {};
 		enemy = {};
-		keysDown = {};
 		serverData = [];
 		lastEmit = JSON.stringify({});
 		
 		gameInitialData = JSON.parse(JSON.stringify(data));
 
-		cGame = new g.handler(images);
 		cGame.create({
 			b : new b.handler(data.man),
 			e : new e.handler(data.enemy),
