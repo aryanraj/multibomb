@@ -41,15 +41,16 @@ requirejs.config({
 require(['game','bomberMan','enemy','imageHandler','underscore','interproc','socketio'], function (g,b,e,i,_,interproc) {
 	var socket = io.connect(),
 		cGame,
-		tCount = 0,
-		startTime = -1,
-		man = {},
-		enemy = {},
-		keysDown = {},
+		tCount,
+		startTime,
+		man,
+		enemy,
+		keysDown,
 		selfId, intervalObject,
-		serverData = [],
-		lastEmit = JSON.stringify({}),
-		gameInitialData, images;
+		serverData,
+		lastEmit,
+		gameInitialData,
+		images;
 	
 	socket.emit('getImages');
 
@@ -62,6 +63,14 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	socket.on("initialData", function(data){
 		
 		console.log("got data");
+
+		tCount = 0;
+		startTime = -1;
+		man = {};
+		enemy = {};
+		keysDown = {};
+		serverData = [];
+		lastEmit = JSON.stringify({});
 		
 		gameInitialData = JSON.parse(JSON.stringify(data));
 
