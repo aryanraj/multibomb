@@ -5,10 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "postinstall": [
-      "./node_modules/.bin/gulp bower controller images",
-      "./node_modules/.bin/gulp requirejsBuild"
-    ]
+    "postinstall": "./node_modules/.bin/gulp"
   },
   "dependencies": {
     "express.io": "^1.1.13"
