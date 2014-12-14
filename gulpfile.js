@@ -99,7 +99,7 @@ gulp.task('requirejsBuild', function(){
 	.pipe(uglify())
 	.pipe(gulp.dest('public'));
 
-	gulp.src(['public/*','!**/main.js','!**/images'])
+	gulp.src(['public/src','public/lib/*.js','!**/require.js','!**/jquery.js'])
 		.pipe(vinylPaths(del));
 })
 
