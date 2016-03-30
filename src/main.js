@@ -38,9 +38,8 @@ requirejs.config({
 	}
 });
 
-require(['game','bomberMan','enemy','imageHandler','underscore','interproc','socketio'], function (cGame,b,e,i,_,interproc) {
+require(['game','bomberMan','enemy','imageHandler','underscore','interproc','socketio','easeljs'], function (cGame,b,e,i,_,interproc) {
 	var socket = io.connect(),
-		cGame,
 		tCount,
 		startTime,
 		man,
@@ -52,7 +51,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 		lastEmit,
 		gameInitialData,
 		images;
-	
+
 	socket.emit('getImages');
 
 	socket.on('images', function(data){
@@ -63,7 +62,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	});
 
 	socket.on("initialData", function(data){
-		
+
 		console.log("got data");
 		if(typeof intervalObject != "undefined")
 			clearInterval(intervalObject);
@@ -74,7 +73,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 		enemy = {};
 		serverData = [];
 		lastEmit = JSON.stringify({});
-		
+
 		gameInitialData = JSON.parse(JSON.stringify(data));
 
 		cGame.create({
@@ -170,7 +169,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 
 			if(typeof serverData[tCount-1] == "undefined")
 				serverData.push({});
-			
+
 			if(lastEmit != JSON.stringify(man[selfId])) {
 				lastEmit = JSON.stringify(man[selfId]);
 				socket.emit("selfData",{
