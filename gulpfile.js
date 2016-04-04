@@ -23,6 +23,8 @@ gulp.task('bower', function(){
 							path.basename = i.replace(/js$/,'');
 				}))
 				.pipe(gulp.dest('public/lib'));
+			gulp.src("style.css")
+			.pipe(gulp.dest('public'));
 	}
 });
 

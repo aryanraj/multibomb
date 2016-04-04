@@ -57,7 +57,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	socket.on('images', function(data){
 		images = new i.handler(data, function(){
 			socket.emit("done");
-			document.body.appendChild(images.canvas);
+			document.getElementById('game-div').appendChild(images.canvas);
 		});
 		cGame.addImage(images);
 	});
