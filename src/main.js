@@ -214,7 +214,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 				var button = document.getElementById('button');
 				button.className = "";
 				setButton('START');
-				setOverlay("Press start to start the game. <br>You can restart the game with the same people in the room.");
+				setOverlay("Give the link for others to join the room");
+				setLink(link);
 				console.log(link);
 			}
 			if(~['start'].indexOf(i)) {

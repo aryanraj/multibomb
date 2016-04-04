@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="/style.css">
 <script type="text/javascript" src="/lib/jquery.js"></script>
 <script type="text/javascript" src="/lib/sweetalert.js"></script>
+<script type="text/javascript" src="/lib/clipboard.js"></script>
 <script>
   function setButton(text) {
     $('#button').html(text);
@@ -9,6 +10,7 @@
       io.connect().emit('button', 'start');
       $(this).blur();
       $(this).unbind('click');
+      closeLink();
     })
   }
   function hideOverlay() {
@@ -16,14 +18,31 @@
   }
   function setOverlay(text) {
     $('#game-div-overlay').show();
-    $('#game-div-overlay').html(text);
+    $('#message').html(text);
+  }
+  function setLink(link) {
+    $('#link').val(link);
+    $('#clipboard').show();
+    window.clipLink = new Clipboard('#link-button');
+  }
+  function closeLink(link) {
+    $('#clipboard').hide();
   }
 </script>
 <button id="button" class="hidden"></button>
-<div id="game-div-overlay">Just wait Loading things.</div>
+<div id="game-div-overlay">
+  <div>
+    <div id="message">Just wait Loading things.</div>
+    <div id="clipboard" class="hidden">
+      <input id="link" value="" readonly>
+      <button id="link-button" data-clipboard-target="#link">
+          <img src="/images/clippy.svg" width="13" alt="Copy to clipboard">
+      </button>
+    </div>
+  </div>
+</div>
 <div id="game-div"></div>
 <div id="info">
   Number of players connected = <b id="player-count">1</b>
 </div>
-
 <script type="text/javascript" data-main="/main" src="/lib/require.js"></script>

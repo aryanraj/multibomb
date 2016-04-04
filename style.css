@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  position: relative;
+}
+
+/* Layout*/
+#game-div, #game-div-overlay, #button, #info {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+#game-div, #game-div-overlay {
+  height: 480px;
+  width: 640px;
+  margin: -240px 0 0 -320px;
+}
+
+#button {
+  height: 50px;
+  width: 200px;
+  margin: -300px 0 0 -100px;
+}
+
+#info {
+  height: 50px;
+  width: 640px;
+  margin: 250px 0 0 -320px;
+}
+
+#game-div {
+  z-index: 1;
+}
+
+#game-div-overlay {
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Styling */
+#info {
+  text-align: center;
+}
+
+#game-div {
+  background-image: url("/images/bk..gif");
+}
+
+#game-div-overlay {
+  color: white;
+  background-color: rgba(0,0,0,0.8);
+}
+
+.hidden {
+  display: none;
+}
+
+
+#clipboard {
+  line-height: 20px;
+}
+
+#clipboard input {
+  padding: 7px 8px;
+  height: 34px;
+  width: 350px;
+}
+
+#clipboard button {
+  height: 34px;
+  width: 34px;
+  padding: 7px 8px;
+}
