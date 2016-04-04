@@ -2,21 +2,28 @@
 <link rel="stylesheet" type="text/css" href="/style.css">
 <script type="text/javascript" src="/lib/jquery.js"></script>
 <script type="text/javascript" src="/lib/sweetalert.js"></script>
-<script type="text/javascript">
-  $(document).ready(function(){
-    $('#form').on('submit', function(e){
-      e.preventDefault();
-      io.connect().emit('form',$(this).serialize());
-      $(this).html('');
+<script>
+  function setButton(text) {
+    $('#button').html(text);
+    $('#button').on('click', function(e) {
+      io.connect().emit('button', 'start');
+      $(this).blur();
+      $(this).unbind('click');
     })
-  })
+  }
+  function hideOverlay() {
+    $('#game-div-overlay').hide();
+  }
+  function setOverlay(text) {
+    $('#game-div-overlay').show();
+    $('#game-div-overlay').html(text);
+  }
 </script>
-<button id="button">Yo bitch</button>
-<div id="game-div-overlay">
-  <form id="form"></form>
-</div>
+<button id="button" class="hidden"></button>
+<div id="game-div-overlay">Just wait Loading things.</div>
 <div id="game-div"></div>
 <div id="info">
-  <div id="message">Just wait Loading things.</div>
+  Number of players connected = <b id="player-count">1</b>
 </div>
+
 <script type="text/javascript" data-main="/main" src="/lib/require.js"></script>

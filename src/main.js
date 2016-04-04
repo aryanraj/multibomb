@@ -58,6 +58,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 		images = new i.handler(data, function(){
 			socket.emit("done");
 			document.getElementById('game-div').appendChild(images.canvas);
+			setOverlay("Ask room admin to start the game");
 		});
 		cGame.addImage(images);
 	});
@@ -140,6 +141,8 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	});
 
 	socket.on('start',function(){
+		setButton('RESTART');
+		hideOverlay();
 		console.log('game started');
 		intervalObject = setInterval(function(){
 			var tt = (new Date()).getTime();
@@ -180,11 +183,14 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 				serverData[tCount-1][selfId] = JSON.parse(JSON.stringify(man[selfId]));
 			}
 
-			if(man[selfId].win) {
-				document.getElementById('message').innerHTML = "you win :D";
+			if(man[selfId].win && !window.finalFlag) {
+				swal("You Won", "GOOD JOB!", "success");
+				window.finalFlag = true;
+				clearInterval(intervalObject);
 			}
-			if(!cGame.getMan("actual",selfId).alive && typeof cGame.getMan("actual",selfId).deathCountdown == "undefined") {
-				document.getElementById('message').innerHTML = "you lose :(";
+			if(!cGame.getMan("actual",selfId).alive && typeof cGame.getMan("actual",selfId).deathCountdown == "undefined" && !window.finalFlag) {
+				window.finalFlag = true;
+				swal("You Lost", "Better Luck next time", "error");
 			}
 			man[selfId] = {};
 
@@ -203,10 +209,22 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	socket.on('HTMLmessage', function(data){
 		console.log(data);
 		for(var i in data) {
-			if(~['message','form'].indexOf(i))
-				document.getElementById(i).innerHTML = data[i];
+			if(~['link'].indexOf(i)) {
+				var link = window.location.origin + data[i];
+				var button = document.getElementById('button');
+				button.className = "";
+				setButton('START');
+				setOverlay("Press start to start the game. <br>You can restart the game with the same people in the room.");
+				console.log(link);
+			}
+			if(~['start'].indexOf(i)) {
+				setOverlay("New Game starts in 5 seconds");
+			}
+			if(~['playerCount'].indexOf(i)) {
+				document.getElementById("player-count").innerHTML = data[i];
+			}
 			if(~['alert'].indexOf(i))
-				alert(data[i]);
+				swal(data[i]);
 			if(~['redirect'].indexOf(i))
 				window.location = window.location[data[i]];
 			if(~['log','info','warn','debug','error'].indexOf(i))
