@@ -57,6 +57,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	socket.on('images', function(data){
 		images = new i.handler(data, function(){
 			socket.emit("done");
+			document.body.appendChild(images.canvas);
 		});
 		cGame.addImage(images);
 	});
@@ -146,11 +147,11 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 				startTime = tt;
 			if((tt-startTime)<30*tCount)
 				return;
-			if((tt-startTime)>30*(tCount+1)) {
+			if((tt-startTime)>30*(tCount+1) + 10000) {
 				clearInterval(intervalObject);
-				alert("You missed some count. Kindly do not leave this tab in background. You can keep it in a new window active.");
-				console.log(JSON.stringify(serverData));
-				// window.location=window.location.origin;
+				swal("Game Disconnected", "You left the game unattended for very long", "error");
+			} else if((tt-startTime)>30*(tCount+1) + 500) {
+				swal("Dont leave the game.", "Others might win! Wait till you catch up", "warning");
 			}
 			tCount++;
 
@@ -200,6 +201,7 @@ require(['game','bomberMan','enemy','imageHandler','underscore','interproc','soc
 	});
 
 	socket.on('HTMLmessage', function(data){
+		console.log(data);
 		for(var i in data) {
 			if(~['message','form'].indexOf(i))
 				document.getElementById(i).innerHTML = data[i];

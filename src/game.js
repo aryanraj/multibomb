@@ -18,7 +18,7 @@ function(game){
 
 	object.prototype.blastBomb = function(x,y) {
 		var blastElement = [];
-		blastElement[-3] = 
+		blastElement[-3] =
 		blastElement[ 0] = true;
 		x = parseInt(x);
 		y = parseInt(y);
@@ -194,7 +194,7 @@ function(game){
 	game.printList = [];
 	game.addImage = function(images) {
 		game.image = images;
-		game.image.onDocumentLoad();
+		// game.image.onDocumentLoad();
 	}
 	game.create = function(objs) {
 		if(!("push" in objs))

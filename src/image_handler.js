@@ -69,7 +69,7 @@ function(img){
 			}
 		}
 		this.onDocumentLoad = function() {
-			document.body.appendChild(this.canvas);
+			// document.body.appendChild(this.canvas);
 		}
 		this.getImage = function(data) {
 			var i;

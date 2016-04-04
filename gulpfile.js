@@ -43,7 +43,7 @@ gulp.task('images', function(){
 		case "production":
 		case "development":
 		default:
-			gulp.src(['images/*.gif'])
+			gulp.src(['images/*'])
 				.pipe(imagemin({
 			        optimizationLevel: 5,
 			        progressive: true,

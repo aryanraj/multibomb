@@ -1,13 +1,15 @@
-<script type="text/javascript" data-main="/main" src="/lib/require.js"></script>
+<link rel="stylesheet" type="text/css" href="/lib/sweetalert.css">
 <script type="text/javascript" src="/lib/jquery.js"></script>
+<script type="text/javascript" src="/lib/sweetalert.js"></script>
 <script type="text/javascript">
-	$(document).ready(function(){
-		$('#form').on('submit', function(e){
-			e.preventDefault();
-			io.connect().emit('form',$(this).serialize());
-			$(this).html('');
-		})
-	})
+  $(document).ready(function(){
+    $('#form').on('submit', function(e){
+      e.preventDefault();
+      io.connect().emit('form',$(this).serialize());
+      $(this).html('');
+    })
+  })
 </script>
 <form id="form"></form>
 <div id="message">Just wait Loading things.</div>
+<script type="text/javascript" data-main="/main" src="/lib/require.js"></script>
